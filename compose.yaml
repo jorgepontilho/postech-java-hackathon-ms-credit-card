@@ -1,0 +1,35 @@
+services:
+  mysql-credit-card:
+    image: mysql:latest
+    restart: always
+    container_name: mysql-credit-card
+    hostname: "mysql-credit-card"
+    environment:
+      MYSQL_DATABASE: 'creditcarddb'
+      MYSQL_USER: 'user_mysql'
+      MYSQL_PASSWORD: 'mSq@2024*PtEc'
+      MYSQL_ROOT_PASSWORD: 'mSq@2024*PtEc'
+    ports:
+      - '3306:3306'
+    networks:
+      - my_network
+
+
+  mscreditcard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql-credit-card
+    hostname: "ms-credit-card"
+    environment:
+      MYSQL_HOSTNAME: mysql-credit-card
+    ports:
+      - 8081:8081
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+    external: true
