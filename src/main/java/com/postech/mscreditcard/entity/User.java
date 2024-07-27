@@ -28,15 +28,14 @@ public class User implements UserDetails {
 
 
     public User(UserDTO userDTO) {
-        this.username = userDTO.getUsername();
-        this.login = userDTO.getLogin();
-        this.password = userDTO.getPassword();
+        this.username = userDTO.getUsuario();
+        this.login = userDTO.getUsuario();
+        this.password = userDTO.getSenha();
 
     }
 
     public UserDTO toDTO() {
         return new UserDTO(
-                this.username,
                 this.login,
                 this.password
         );

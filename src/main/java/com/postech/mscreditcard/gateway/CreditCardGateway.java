@@ -22,7 +22,7 @@ public class CreditCardGateway implements ICreditCardGateway {
         try {
             //Login e usuário definido pelos professores
             if ("adj2" .equals(login) && "adj@1234" .equals(password)) {
-                return new UserDTO(login, login, password);
+                return new UserDTO(login, password);
             } else {
                 return null;
             }
@@ -45,7 +45,11 @@ public class CreditCardGateway implements ICreditCardGateway {
 
     @Override
     public CustomerDTO findByCpf(String cpf) {
-        return customerRepository.findByCpf(cpf).toDTO();
+        try {
+            return customerRepository.findByCpf(cpf).toDTO();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public CardDTO createCard(CardDTO cardDTO) {

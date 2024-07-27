@@ -42,10 +42,10 @@ public class CreditCardController {
             @ApiResponse(description = "The Token by login", responseCode = "200", content = @Content(schema = @Schema(implementation = User.class))),
             @ApiResponse(description = "User Not Found", responseCode = "404", content = @Content(schema = @Schema(type = "string", example = "Login ou senha inválida.")))
     })
-    public ResponseEntity login(@RequestBody @Valid UserDTO user) {
-        log.info("PostMapping - Login for user [{}]", user.getLogin());
+    public ResponseEntity autenticacao(@RequestBody @Valid UserDTO user) {
+        log.info("PostMapping - Autenticacao for user [{}]", user.getUsuario());
         try {
-            UserDTO userDTO = creditCardGateway.findByLoginAndPassword(user.getLogin(), user.getPassword());
+            UserDTO userDTO = creditCardGateway.findByLoginAndPassword(user.getUsuario(), user.getSenha());
             if (userDTO == null) {
                 return new ResponseEntity<>("Login ou Senha inválida.", HttpStatus.BAD_REQUEST);
             }
