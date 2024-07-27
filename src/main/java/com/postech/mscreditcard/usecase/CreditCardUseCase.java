@@ -14,13 +14,11 @@ public class CreditCardUseCase {
             throw new IllegalArgumentException("Cliente inválido.");
         }
     }
-
     public static void validarCartao(CardDTO cardDTO) {
         if (cardDTO == null) {
             throw new IllegalArgumentException("Cartão inválido.");
         }
     }
-
     public static void validarPagamento(PaymentDTO paymentDTO) {
         if (paymentDTO == null) {
             throw new IllegalArgumentException("Pagamento inválido.");

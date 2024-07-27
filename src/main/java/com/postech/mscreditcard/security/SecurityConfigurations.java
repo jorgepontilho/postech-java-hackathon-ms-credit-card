@@ -40,20 +40,6 @@ public class SecurityConfigurations {
                             ,"/api/pagamentos", "/api/pagamentos/**" )
                             .permitAll().anyRequest().authenticated();
 
-
-                    /**************************
-
-                     authorizeConfig.requestMatchers(
-                     "/api/users").hasRole("ADMIN")
-                     .anyRequest()
-                     .authenticated();
-
-                     authorizeConfig.requestMatchers(
-                     "/api/users", "/api/users/**")
-                     .permitAll()
-                     .anyRequest()
-                     .authenticated();
-                     *******************************************/
                 }).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
