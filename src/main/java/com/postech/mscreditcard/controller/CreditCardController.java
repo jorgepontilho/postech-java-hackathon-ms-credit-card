@@ -2,6 +2,7 @@ package com.postech.mscreditcard.controller;
 
 import com.postech.mscreditcard.dto.*;
 import com.postech.mscreditcard.entity.*;
+import com.postech.mscreditcard.exceptions.MaxCardsException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
 import com.postech.mscreditcard.security.SecurityFilter;
 import com.postech.mscreditcard.usecase.CreditCardUseCase;
@@ -35,24 +36,32 @@ public class CreditCardController {
     @Autowired
     private SecurityFilter securityFilter;
 
+    @Autowired
+    private CreditCardUseCase creditCardUseCase;
+
     private final CreditCardGateway creditCardGateway;
 
 
     @PostMapping("/cartao")
     @Operation(summary = "Create a new Card with a DTO", responses = {
             @ApiResponse(description = "The new Card was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Card.class))),
-            @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando")))
+            @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
+            @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
+            @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
     public ResponseEntity<?> createCard(HttpServletRequest request, @Valid @RequestBody CardDTO cardDTO) {
-        log.info("PostMapping - createCard [{}]", cardDTO.getNumero());
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
+        log.info("PostMapping - createCard [{}]", cardDTO.getCpf());
         try {
-            CreditCardUseCase.validarCartao(cardDTO);
-            CardDTO cardCreated = creditCardGateway.createCard(cardDTO);
-            return new ResponseEntity<>(cardCreated, HttpStatus.CREATED);
+                creditCardUseCase.validateCardCreation(cardDTO);
+                CardDTO cardCreated = creditCardGateway.createCard(cardDTO);
+                return new ResponseEntity<>(cardCreated, HttpStatus.CREATED);
+
+        } catch (MaxCardsException me) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(me.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -70,5 +79,6 @@ public class CreditCardController {
         }
         return new ResponseEntity<>(creditCardGateway.listAllCards(), HttpStatus.OK);
     }
+    //TODO delete e/ou update
 }
 

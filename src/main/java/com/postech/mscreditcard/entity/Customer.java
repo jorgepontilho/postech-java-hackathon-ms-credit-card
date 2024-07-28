@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
-@Table(name = "tb_Customer")
+@Table(name = "tb_customer")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer {
@@ -17,39 +19,41 @@ public class Customer {
     private Long id;
     @Column(unique = true, nullable = false)
     private String cpf;
-    private String nome;
+    private String name;
     private String email;
-    private String telefone;
-    private String rua;
-    private String cidade;
-    private String estado;
-    private String cep;
-    private String pais;
+    private String phone;
+    private String street;
+    private String city;
+    private String uf;
+    private String zipCode;
+    private String country;
+    @OneToMany
+    private List<Card> cards;
 
     public Customer(CustomerDTO customerDTO) {
         this.id = customerDTO.getId();
         this.cpf = customerDTO.getCpf();
-        this.nome = customerDTO.getNome();
+        this.name = customerDTO.getNome();
         this.email = customerDTO.getEmail();
-        this.telefone = customerDTO.getTelefone();
-        this.rua = customerDTO.getRua();
-        this.cidade = customerDTO.getRua();
-        this.estado = customerDTO.getEstado();
-        this.cep = customerDTO.getCep();
-        this.pais = customerDTO.getPais();
+        this.phone = customerDTO.getTelefone();
+        this.street = customerDTO.getRua();
+        this.city = customerDTO.getRua();
+        this.uf = customerDTO.getEstado();
+        this.zipCode = customerDTO.getCep();
+        this.country = customerDTO.getPais();
     }
     public CustomerDTO toDTO() {
         return new CustomerDTO(
                 this.id,
                 this.cpf,
-                this.nome,
+                this.name,
                 this.email,
-                this.telefone,
-                this.rua,
-                this.cidade,
-                this.estado,
-                this.cep,
-                this.pais
+                this.phone,
+                this.street,
+                this.city,
+                this.uf,
+                this.zipCode,
+                this.country
         );
     }
 }

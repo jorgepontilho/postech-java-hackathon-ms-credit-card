@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
-@Table(name = "tb_Card")
+@Table(name = "tb_card")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Card {
@@ -16,21 +18,23 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     private String cpf;
-    private double limite;
-    private String numero;
-    private String data_validade;
+    private BigDecimal limitValue;
+    private String cardNumber;
+    private String expirationDate;
     private String cvv;
+    @ManyToOne
+    private Customer customer;
 
-    public Card(CardDTO CardDTO) {
-        this.id = CardDTO.getId();
-        this.cpf = CardDTO.getCpf();
-        this.limite = CardDTO.getLimite();
-        this.numero = CardDTO.getNumero();
-        this.data_validade = CardDTO.getData_validade();
-        this.cvv = CardDTO.getCvv();
+    public Card(CardDTO cardDTO) {
+        this.id = cardDTO.getId();
+        this.cpf = cardDTO.getCpf();
+        this.limitValue = cardDTO.getLimite();
+        this.cardNumber = cardDTO.getNumero();
+        this.expirationDate = cardDTO.getDataValidade();
+        this.cvv = cardDTO.getCvv();
     }
 
     public CardDTO toDTO() {
-        return new CardDTO(this.id, this.cpf, this.limite, this.numero, this.data_validade, this.cvv);
+        return new CardDTO(this.id, this.cpf, this.limitValue, this.cardNumber, this.expirationDate, this.cvv);
     }
 }

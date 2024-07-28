@@ -25,7 +25,6 @@ public class CustomerGateway implements ICustomerGateway {
     public CustomerDTO createCustomer(CustomerDTO customerDTO) {
         try {
             Customer customerNew = new Customer(customerDTO);
-            //Customer customerNew = null;
             customerNew = customerRepository.save(customerNew);
             return customerNew.toDTO();
         } catch (Exception e) {
