@@ -1,11 +1,11 @@
 package com.postech.mscreditcard.controller;
 
-import com.postech.mscreditcard.dto.*;
-import com.postech.mscreditcard.entity.*;
+import com.postech.mscreditcard.dto.PaymentDTO;
+import com.postech.mscreditcard.entity.Payment;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
 import com.postech.mscreditcard.security.SecurityFilter;
-import com.postech.mscreditcard.usecase.CreditCardUseCase;
 import com.postech.mscreditcard.security.TokenService;
+import com.postech.mscreditcard.usecase.CreditCardUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class CreditCardController {
+public class PaymentController {
 
     @Setter
     @Autowired
@@ -37,38 +37,38 @@ public class CreditCardController {
 
     private final CreditCardGateway creditCardGateway;
 
-
-    @PostMapping("/cartao")
-    @Operation(summary = "Create a new Card with a DTO", responses = {
-            @ApiResponse(description = "The new Card was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Card.class))),
+    @PostMapping("/pagamentos")
+    @Operation(summary = "Create a new Payment with a DTO", responses = {
+            @ApiResponse(description = "The new Payment was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Payment.class))),
             @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando")))
     })
-    public ResponseEntity<?> createCard(HttpServletRequest request, @Valid @RequestBody CardDTO cardDTO) {
-        log.info("PostMapping - createCard [{}]", cardDTO.getNumero());
+    public ResponseEntity<?> createPayment(HttpServletRequest request, @Valid @RequestBody PaymentDTO paymentDTO) {
+        log.info("PostMapping - createpayment [{}]", paymentDTO.getValor());
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
         try {
-            CreditCardUseCase.validarCartao(cardDTO);
-            CardDTO cardCreated = creditCardGateway.createCard(cardDTO);
-            return new ResponseEntity<>(cardCreated, HttpStatus.CREATED);
+            CreditCardUseCase.validarPagamento(paymentDTO);
+            PaymentDTO paymentCreated = creditCardGateway.createPayment(paymentDTO);
+            return new ResponseEntity<>(paymentCreated, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @GetMapping("/cartao")
-    @Operation(summary = "Get all Cards", responses = {
-            @ApiResponse(description = "List of all Cards", responseCode = "200"),
+    @GetMapping("/pagamentos")
+    @Operation(summary = "Get all Payments", responses = {
+            @ApiResponse(description = "List of all Payments", responseCode = "200"),
     })
-    public ResponseEntity<?> listAllCards(HttpServletRequest request) {
-        log.info("GetMapping - listAllCards");
+    public ResponseEntity<?> listAllPayments(HttpServletRequest request) {
+        log.info("GetMapping - listAllPayments");
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        return new ResponseEntity<>(creditCardGateway.listAllCards(), HttpStatus.OK);
+        return new ResponseEntity<>(creditCardGateway.listAllPayments(), HttpStatus.OK);
     }
+
 }
 
