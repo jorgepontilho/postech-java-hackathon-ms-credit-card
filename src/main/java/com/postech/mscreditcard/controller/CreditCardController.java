@@ -56,29 +56,6 @@ public class CreditCardController {
         }
     }
 
-    @PostMapping("/cliente")
-    @Operation(summary = "Create a new Customer with a DTO", responses = {
-            @ApiResponse(description = "The new Customer was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Customer.class))),
-            @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando")))
-    })
-    public ResponseEntity<?> createCustomer(HttpServletRequest request, @Valid @RequestBody CustomerDTO customerDTO) {
-        log.info("PostMapping - createCustomer [{}]", customerDTO.getNome());
-        if (request.getAttribute("error") != null) {
-            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
-                    .body(request.getAttribute("error"));
-        }
-        try {
-            CreditCardUseCase.validarCliente(customerDTO);
-            if (creditCardGateway.findByCpf(customerDTO.getCpf()) != null) {
-                return new ResponseEntity<>("Cliente já existe.", HttpStatus.BAD_REQUEST);
-            }
-            CustomerDTO customerCreated = creditCardGateway.createCustomer(customerDTO);
-            return new ResponseEntity<>(customerCreated, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
 
     @PostMapping("/cartao")
     @Operation(summary = "Create a new Card with a DTO", responses = {
@@ -120,18 +97,6 @@ public class CreditCardController {
         }
     }
 
-    @GetMapping("/cliente")
-    @Operation(summary = "Get all Customers", responses = {
-            @ApiResponse(description = "List of all cutomers", responseCode = "200"),
-    })
-    public ResponseEntity<?> listAllCustomers(HttpServletRequest request) {
-        log.info("GetMapping - listAllCustomer");
-        if (request.getAttribute("error") != null) {
-            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
-                    .body(request.getAttribute("error"));
-        }
-        return new ResponseEntity<>(creditCardGateway.listAllCustomers(), HttpStatus.OK);
-    }
 
     @GetMapping("/cartao")
     @Operation(summary = "Get all Cards", responses = {

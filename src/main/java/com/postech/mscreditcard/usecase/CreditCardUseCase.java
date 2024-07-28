@@ -9,11 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class CreditCardUseCase {
-    public static void validarCliente(CustomerDTO customerDTO) {
-        if (customerDTO == null) {
-            throw new IllegalArgumentException("Cliente inválido.");
-        }
-    }
+
     public static void validarCartao(CardDTO cardDTO) {
         if (cardDTO == null) {
             throw new IllegalArgumentException("Cartão inválido.");

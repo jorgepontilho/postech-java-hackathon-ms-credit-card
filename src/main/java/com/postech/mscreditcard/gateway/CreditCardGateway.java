@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class CreditCardGateway implements ICreditCardGateway {
-    private final CustomerRepository customerRepository;
     private final CardRepository cardRepository;
     private final PaymentRepository paymentRepository;
 
@@ -31,25 +30,9 @@ public class CreditCardGateway implements ICreditCardGateway {
         }
     }
 
-    public CreditCardGateway(CustomerRepository customerRepository, CardRepository cardRepository, PaymentRepository paymentRepository) {
-        this.customerRepository = customerRepository;
+    public CreditCardGateway(CardRepository cardRepository, PaymentRepository paymentRepository) {
         this.cardRepository = cardRepository;
         this.paymentRepository = paymentRepository;
-    }
-
-    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
-        Customer customerNew = new Customer(customerDTO);
-        customerNew = customerRepository.save(customerNew);
-        return customerNew.toDTO();
-    }
-
-    @Override
-    public CustomerDTO findByCpf(String cpf) {
-        try {
-            return customerRepository.findByCpf(cpf).toDTO();
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     public CardDTO createCard(CardDTO cardDTO) {
@@ -64,24 +47,12 @@ public class CreditCardGateway implements ICreditCardGateway {
         return paymentNew.toDTO();
     }
 
-    private CustomerDTO toCustomerDTO(Customer customer) {
-        return customer.toDTO();
-    }
-
     private CardDTO toCardDTO(Card card) {
         return card.toDTO();
     }
 
     private PaymentDTO toPaymentDTO(Payment payment) {
         return payment.toDTO();
-    }
-
-    public List<CustomerDTO> listAllCustomers() {
-        List<Customer> customerList = customerRepository.findAll();
-        return customerList
-                .stream()
-                .map(this::toCustomerDTO)
-                .collect(Collectors.toList());
     }
 
     public List<CardDTO> listAllCards() {
