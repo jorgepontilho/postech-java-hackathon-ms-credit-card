@@ -52,14 +52,14 @@ public class SecurityFilter extends OncePerRequestFilter {
     private void validateRequest(HttpServletRequest request) {
         var token = this.recoverToken(request);
         if (token == null) {
-            request.setAttribute("error_code", HttpStatus.BAD_REQUEST);
+            request.setAttribute("error_code", HttpStatus.UNAUTHORIZED);
             request.setAttribute("error", "Bearer token inválido");
             return;
         }
 
         User user = validToken(token);
         if (user == null) {
-            request.setAttribute("error_code", HttpStatus.BAD_REQUEST);
+            request.setAttribute("error_code", HttpStatus.UNAUTHORIZED);
             request.setAttribute("error", "Bearer token inválido");
             return;
         }
