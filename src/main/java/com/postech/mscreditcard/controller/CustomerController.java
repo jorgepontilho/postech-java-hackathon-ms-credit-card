@@ -22,6 +22,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -35,6 +37,9 @@ public class CustomerController {
     @Setter
     @Autowired
     private SecurityFilter securityFilter;
+
+    @Autowired
+    private CustomerUseCase customerUseCase;
 
     private final CustomerGateway customerGateway;
 
@@ -54,12 +59,13 @@ public class CustomerController {
 
         log.info("PostMapping - createCustomer [{}]", customerDTO.getCpf());
         try {
-            CustomerUseCase.validarCliente(customerDTO);
-            if (customerGateway.findByCpf(customerDTO.getCpf()) != null) {
+            if (customerUseCase.canCreateCustomer(customerDTO)) {
+                CustomerDTO customerCreated = customerGateway.createCustomer(customerDTO);
+                return new ResponseEntity<>(customerCreated, HttpStatus.CREATED);
+            } else {
                 return new ResponseEntity<>("Cliente já existe.", HttpStatus.BAD_REQUEST);
             }
-            CustomerDTO customerCreated = customerGateway.createCustomer(customerDTO);
-            return new ResponseEntity<>(customerCreated, HttpStatus.CREATED);
+
         } catch (UnknownErrorException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         } catch (Exception e) {
@@ -71,14 +77,47 @@ public class CustomerController {
     @GetMapping("/cliente")
     @Operation(summary = "Get all Customers", responses = {
             @ApiResponse(description = "List of all cutomers", responseCode = "200"),
+            @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
+            @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
+            @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
     public ResponseEntity<?> listAllCustomers(HttpServletRequest request) {
-        log.info("GetMapping - listAllCustomer");
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        return new ResponseEntity<>(customerGateway.listAllCustomers(), HttpStatus.OK);
+        try {
+            log.info("GetMapping - listAllCustomer");
+            List<CustomerDTO> allCustomers = customerGateway.listAllCustomers();
+            return new ResponseEntity<>(allCustomers, HttpStatus.OK);
+        } catch (UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/cliente/{id}")
+    @Operation(summary = "Delete a Customers", responses = {
+            @ApiResponse(description = "Delete a customer", responseCode = "200"),
+            @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
+            @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
+            @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
+    })
+    public ResponseEntity<?> deleteCustomer(HttpServletRequest request, @PathVariable @Valid Long id) {
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
+        }
+        try {
+            log.info("DeleteMapping - delete customer {}", id);
+            customerGateway.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 }
