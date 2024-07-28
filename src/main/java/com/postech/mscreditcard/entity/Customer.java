@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+    @Column(unique = true, nullable = false)
     private String cpf;
     private String nome;
     private String email;
@@ -25,17 +26,17 @@ public class Customer {
     private String cep;
     private String pais;
 
-    public Customer(CustomerDTO CustomerDTO) {
-        this.id = CustomerDTO.getId();
-        this.cpf = CustomerDTO.getCpf();
-        this.nome = CustomerDTO.getNome();
-        this.email = CustomerDTO.getEmail();
-        this.telefone = CustomerDTO.getTelefone();
-        this.rua = CustomerDTO.getRua();
-        this.cidade = CustomerDTO.getRua();
-        this.estado = CustomerDTO.getEstado();
-        this.cep = CustomerDTO.getCep();
-        this.pais = CustomerDTO.getPais();
+    public Customer(CustomerDTO customerDTO) {
+        this.id = customerDTO.getId();
+        this.cpf = customerDTO.getCpf();
+        this.nome = customerDTO.getNome();
+        this.email = customerDTO.getEmail();
+        this.telefone = customerDTO.getTelefone();
+        this.rua = customerDTO.getRua();
+        this.cidade = customerDTO.getRua();
+        this.estado = customerDTO.getEstado();
+        this.cep = customerDTO.getCep();
+        this.pais = customerDTO.getPais();
     }
     public CustomerDTO toDTO() {
         return new CustomerDTO(

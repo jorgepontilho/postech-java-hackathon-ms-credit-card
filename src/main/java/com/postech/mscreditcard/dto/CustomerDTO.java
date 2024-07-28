@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerDTO {
-    Integer id;
+    Long id;
     @CPF(message = "Invalid CPF")
     @NotBlank(message = "CPF is required")
     private String cpf;
