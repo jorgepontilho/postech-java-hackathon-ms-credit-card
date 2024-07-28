@@ -1,18 +1,11 @@
 package com.postech.mscreditcard.controller;
 
-import com.postech.mscreditcard.dto.CardDTO;
 import com.postech.mscreditcard.dto.CustomerDTO;
-import com.postech.mscreditcard.dto.PaymentDTO;
-import com.postech.mscreditcard.dto.UserDTO;
-import com.postech.mscreditcard.entity.Card;
 import com.postech.mscreditcard.entity.Customer;
-import com.postech.mscreditcard.entity.Payment;
-import com.postech.mscreditcard.entity.User;
-import com.postech.mscreditcard.gateway.CreditCardGateway;
+import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CustomerGateway;
 import com.postech.mscreditcard.security.SecurityFilter;
 import com.postech.mscreditcard.security.TokenService;
-import com.postech.mscreditcard.usecase.CreditCardUseCase;
 import com.postech.mscreditcard.usecase.CustomerUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -58,8 +51,8 @@ public class CustomerController {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        log.info("PostMapping - createCustomer [{}]", customerDTO.getCpf());
 
+        log.info("PostMapping - createCustomer [{}]", customerDTO.getCpf());
         try {
             CustomerUseCase.validarCliente(customerDTO);
             if (customerGateway.findByCpf(customerDTO.getCpf()) != null) {
@@ -67,6 +60,8 @@ public class CustomerController {
             }
             CustomerDTO customerCreated = customerGateway.createCustomer(customerDTO);
             return new ResponseEntity<>(customerCreated, HttpStatus.CREATED);
+        } catch (UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
