@@ -37,11 +37,11 @@ docker-compose up --build
 ## Documentação
 
 A documentação detalhada da API está acessível na URL:
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8081/swagger-ui/index.html
 
 
 ## Portas configuradas
 
-App: http://localhost:8080
+App: http://localhost:8081
 
 MySQL: jdbc:mysql://localhost:3306/creditcarddb

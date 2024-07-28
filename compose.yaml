@@ -11,6 +11,11 @@ services:
       MYSQL_ROOT_PASSWORD: 'mSq@2024*PtEc'
     ports:
       - '3306:3306'
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "mysql-credit-card" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
     networks:
       - my_network
 
@@ -20,7 +25,8 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - mysql-credit-card
+      mysql-credit-card:
+        condition: service_healthy
     hostname: "ms-credit-card"
     environment:
       MYSQL_HOSTNAME: mysql-credit-card
