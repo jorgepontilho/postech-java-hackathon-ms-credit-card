@@ -23,7 +23,7 @@ public class CustomerUseCase {
             if (customerDTO == null) {
                 throw new IllegalArgumentException("Cliente inválido.");
             }
-            canCreateCustomer =  customerGateway.findByCpf(customerDTO.getCpf()) == null;
+            canCreateCustomer = customerGateway.findByCpf(customerDTO.getCpf()) == null;
         } catch (NotFoundException nf) {
             canCreateCustomer = true;
         } catch (UnknownErrorException ue) {
