@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -29,6 +31,8 @@ public class Customer {
     private String country;
     @OneToMany
     private List<Card> cards;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public Customer(CustomerDTO customerDTO) {
         this.id = customerDTO.getId();

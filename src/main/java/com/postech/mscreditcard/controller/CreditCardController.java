@@ -3,6 +3,7 @@ package com.postech.mscreditcard.controller;
 import com.postech.mscreditcard.dto.*;
 import com.postech.mscreditcard.entity.*;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
+import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
 import com.postech.mscreditcard.security.SecurityFilter;
 import com.postech.mscreditcard.usecase.CreditCardUseCase;
@@ -63,6 +64,8 @@ public class CreditCardController {
 
         } catch (MaxCardsException me) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(me.getMessage());
+        }  catch (UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

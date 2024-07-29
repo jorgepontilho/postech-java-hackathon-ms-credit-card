@@ -2,6 +2,9 @@ package com.postech.mscreditcard.controller;
 
 import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.entity.Payment;
+import com.postech.mscreditcard.exceptions.InvalidPaymentException;
+import com.postech.mscreditcard.exceptions.NoLimitCardException;
+import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.PaymentGateway;
 import com.postech.mscreditcard.security.SecurityFilter;
 import com.postech.mscreditcard.security.TokenService;
@@ -57,8 +60,12 @@ public class PaymentController {
             paymentUseCase.validatePayment(paymentDTO);
             PaymentDTO paymentCreated = paymentGateway.createPayment(paymentDTO);
             return new ResponseEntity<>(paymentCreated, HttpStatus.CREATED);
-        } catch (Exception e) {
-            throw e;
+        } catch (NoLimitCardException e) {
+            return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(e.getMessage());
+        }catch (InvalidPaymentException | UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }  catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 

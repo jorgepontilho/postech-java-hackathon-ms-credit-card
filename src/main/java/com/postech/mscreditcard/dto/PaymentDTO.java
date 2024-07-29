@@ -35,8 +35,11 @@ public class PaymentDTO {
     @DecimalMin(value = "0.0", inclusive = false, message = "Valor precisa ser maior que 0")
     private BigDecimal valor;
 
+    private String uuid;
+
     public PaymentDTO(Payment payment) {
         this.id = payment.getId();
+        this.uuid = payment.getUuid();
         this.cpf = payment.getCustomer().getCpf();
         this.numero = payment.getCard().getCardNumber();
         this.dataValidade = payment.getCard().getExpirationDate();
