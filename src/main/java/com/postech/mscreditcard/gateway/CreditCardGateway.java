@@ -21,15 +21,13 @@ public class CreditCardGateway implements ICreditCardGateway {
     @Value("${app.password}")
     public String PASSWORD;
     private final CardRepository cardRepository;
-    private final PaymentRepository paymentRepository;
     private final CustomerRepository customerRepository;
 
 
 
 
-    public CreditCardGateway(CardRepository cardRepository, PaymentRepository paymentRepository, CustomerRepository customerRepository) {
+    public CreditCardGateway(CardRepository cardRepository, CustomerRepository customerRepository) {
         this.cardRepository = cardRepository;
-        this.paymentRepository = paymentRepository;
         this.customerRepository = customerRepository;
     }
 
@@ -63,18 +61,8 @@ public class CreditCardGateway implements ICreditCardGateway {
 
     }
 
-    public PaymentDTO createPayment(PaymentDTO paymentDTO) {
-        Payment paymentNew = new Payment(paymentDTO);
-        paymentNew = paymentRepository.save(paymentNew);
-        return paymentNew.toDTO();
-    }
-
     private CardDTO toCardDTO(Card card) {
         return card.toDTO();
-    }
-
-    private PaymentDTO toPaymentDTO(Payment payment) {
-        return payment.toDTO();
     }
 
     public List<CardDTO> listAllCards() {
@@ -85,14 +73,7 @@ public class CreditCardGateway implements ICreditCardGateway {
                 .collect(Collectors.toList());
     }
 
-    public List<PaymentDTO> listAllPayments() {
-        List<Payment> paymentList = paymentRepository.findAll();
-        return paymentList
-                .stream()
-                .map(this::toPaymentDTO)
-                .collect(Collectors.toList());
-    }
-
+    @Override
     public List<CardDTO> listAllCustomerCards(String cpf) {
         try {
             log.info("List all customer cards {}",cpf);

@@ -1,9 +1,10 @@
 package com.postech.mscreditcard.interfaces;
 
 import com.postech.mscreditcard.dto.CustomerDTO;
-import com.postech.mscreditcard.dto.UserDTO;
 
 public interface ICustomerGateway {
+
+    CustomerDTO createCustomer(CustomerDTO customerDTO);
 
     CustomerDTO findByCpf(String cpf);
 }

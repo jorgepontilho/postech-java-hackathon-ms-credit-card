@@ -47,6 +47,7 @@ public class CreditCardController {
             @ApiResponse(description = "The new Card was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Card.class))),
             @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
+            @ApiResponse(description = "Max cards reached", responseCode = "403", content = @Content(schema = @Schema(type = "string", example = "Número máx. de cartões excedido"))),
             @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
     public ResponseEntity<?> createCard(HttpServletRequest request, @Valid @RequestBody CardDTO cardDTO) {

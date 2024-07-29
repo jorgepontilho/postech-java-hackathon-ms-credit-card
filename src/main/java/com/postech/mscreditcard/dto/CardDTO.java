@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 public class CardDTO {
-    Integer id;
+    Long id;
     @CPF(message = "CPF Inválido")
     @NotBlank(message = "CPF é obrigatório")
     private String cpf;
@@ -33,7 +33,7 @@ public class CardDTO {
     @Size(min = 3, max = 4, message = "CVV tem que ser entre 3 ou 4 digitos")
     private String cvv;
 
-    public CardDTO(Integer id, String cpf, BigDecimal limitValue, String cardNumber, String expirationDate, String cvv) {
+    public CardDTO(Long id, String cpf, BigDecimal limitValue, String cardNumber, String expirationDate, String cvv) {
         this.id = id;
         this.cpf = cpf;
         this.limite = limitValue;

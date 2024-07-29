@@ -16,13 +16,21 @@ import java.math.BigDecimal;
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Long id;
+
+    @Column(name = "cpf", nullable = false)
     private String cpf;
+    @Column(name = "limit_value", precision = 10, scale = 2, nullable = false)
     private BigDecimal limitValue;
+    @Column(name = "card_number", nullable = false)
     private String cardNumber;
+    @Column(name = "expiration_date", nullable = false)
     private String expirationDate;
+    @Column(name = "cvv", nullable = false)
     private String cvv;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     public Card(CardDTO cardDTO) {

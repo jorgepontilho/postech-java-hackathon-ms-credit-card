@@ -22,6 +22,7 @@ public class CustomerGateway implements ICustomerGateway {
         this.customerRepository = customerRepository;
     }
 
+    @Override
     public CustomerDTO createCustomer(CustomerDTO customerDTO) {
         try {
             Customer customerNew = new Customer(customerDTO);
@@ -47,9 +48,6 @@ public class CustomerGateway implements ICustomerGateway {
             throw new UnknownErrorException("Error finding customer", e);
         }
     }
-
-
-
 
     public List<CustomerDTO> listAllCustomers() {
         try {

@@ -22,11 +22,7 @@ public class CreditCardUseCase {
     }
 
     public void validateCardCreation(CardDTO cardDTO) {
-
         try {
-            if (cardDTO == null) {
-                throw new IllegalArgumentException("Cartão inválido.");
-            }
             log.info("Validate card creation {}", cardDTO.toString());
             List<CardDTO> creditCardDTOList = creditCardGateway.listAllCustomerCards(cardDTO.getCpf());
             if (creditCardDTOList.size() == MAX_CARDS){
@@ -34,11 +30,6 @@ public class CreditCardUseCase {
             }
         } catch (UnknownErrorException ue) {
             throw ue;
-        }
-    }
-    public static void validarPagamento(PaymentDTO paymentDTO) {
-        if (paymentDTO == null) {
-            throw new IllegalArgumentException("Pagamento inválido.");
         }
     }
 

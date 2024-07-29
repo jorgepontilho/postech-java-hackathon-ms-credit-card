@@ -6,31 +6,39 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
-@Table(name = "tb_Payment")
+@Table(name = "tb_payment")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    private String cpf;
-    private String numero;
-    private String data_validade;
-    private String cvv;
-    private double valor;
+    private
+    Long id;
 
-    public Payment(PaymentDTO PaymentDTO) {
-        this.id = PaymentDTO.getId();
-        this.cpf = PaymentDTO.getCpf();
-        this.numero = PaymentDTO.getNumero();
-        this.data_validade = PaymentDTO.getData_validade();
-        this.cvv = PaymentDTO.getCvv();
-        this.valor = PaymentDTO.getValor();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_id", nullable = false)
+    private Card card;
+
+    @Column(name = "value", precision = 10, scale = 2, nullable = false)
+    private BigDecimal value;
+
+
+    public Payment(PaymentDTO paymentDTO, Card card) {
+        this.id = paymentDTO.getId();
+        this.card = card;
+        this.customer = card.getCustomer();
+        this.value = paymentDTO.getValor();
     }
 
     public PaymentDTO toDTO() {
-        return new PaymentDTO(this.id, this.cpf, this.numero, this.data_validade, this.cvv, this.valor);
+        return new PaymentDTO(this);
     }
 }
