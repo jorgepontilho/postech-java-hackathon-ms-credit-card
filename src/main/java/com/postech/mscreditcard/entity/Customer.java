@@ -28,7 +28,7 @@ public class Customer {
     private String zipCode;
     private String country;
     @OneToMany
-    private List<Card> cards;
+    private List<CreditCard> creditCards;
 
     public Customer(CustomerDTO customerDTO) {
         this.id = customerDTO.getId();

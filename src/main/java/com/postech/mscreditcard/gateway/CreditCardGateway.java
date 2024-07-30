@@ -20,16 +20,11 @@ public class CreditCardGateway implements ICreditCardGateway {
     public String LOGIN;
     @Value("${app.password}")
     public String PASSWORD;
-    private final CardRepository cardRepository;
-    private final PaymentRepository paymentRepository;
+    private final CreditCardRepository creditCardRepository;
     private final CustomerRepository customerRepository;
 
-
-
-
-    public CreditCardGateway(CardRepository cardRepository, PaymentRepository paymentRepository, CustomerRepository customerRepository) {
-        this.cardRepository = cardRepository;
-        this.paymentRepository = paymentRepository;
+    public CreditCardGateway(CreditCardRepository creditCardRepository, CustomerRepository customerRepository) {
+        this.creditCardRepository = creditCardRepository;
         this.customerRepository = customerRepository;
     }
 
@@ -48,14 +43,14 @@ public class CreditCardGateway implements ICreditCardGateway {
     }
 
     @Override
-    public CardDTO createCard(CardDTO cardDTO) {
+    public CreditCardDTO createCard(CreditCardDTO creditCardDTO) {
         try {
-            Card cardNew = new Card(cardDTO);
-            Customer customer = customerRepository.findByCpf(cardDTO.getCpf())
+            CreditCard creditCardNew = new CreditCard(creditCardDTO);
+            Customer customer = customerRepository.findByCpf(creditCardDTO.getCpf())
                     .orElseThrow(() -> new NotFoundException("Customer not found"));
-            cardNew.setCustomer(customer);
-            cardNew = cardRepository.save(cardNew);
-            return cardNew.toDTO();
+            creditCardNew.setCustomer(customer);
+            creditCardNew = creditCardRepository.save(creditCardNew);
+            return creditCardNew.toDTO();
         } catch (Exception e ){
             log.error("Error creating card", e);
             throw e;
@@ -63,41 +58,23 @@ public class CreditCardGateway implements ICreditCardGateway {
 
     }
 
-    public PaymentDTO createPayment(PaymentDTO paymentDTO) {
-        Payment paymentNew = new Payment(paymentDTO);
-        paymentNew = paymentRepository.save(paymentNew);
-        return paymentNew.toDTO();
+    private CreditCardDTO toCardDTO(CreditCard creditCard) {
+        return creditCard.toDTO();
     }
 
-    private CardDTO toCardDTO(Card card) {
-        return card.toDTO();
-    }
-
-    private PaymentDTO toPaymentDTO(Payment payment) {
-        return payment.toDTO();
-    }
-
-    public List<CardDTO> listAllCards() {
-        List<Card> cardList = cardRepository.findAll();
-        return cardList
+    public List<CreditCardDTO> listAllCards() {
+        List<CreditCard> creditCardList = creditCardRepository.findAll();
+        return creditCardList
                 .stream()
                 .map(this::toCardDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<PaymentDTO> listAllPayments() {
-        List<Payment> paymentList = paymentRepository.findAll();
-        return paymentList
-                .stream()
-                .map(this::toPaymentDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<CardDTO> listAllCustomerCards(String cpf) {
+    public List<CreditCardDTO> listAllCustomerCards(String cpf) {
         try {
             log.info("List all customer cards {}",cpf);
-            List<Card> cardList = cardRepository.findAllByCpf(cpf);
-            return cardList
+            List<CreditCard> creditCardList = creditCardRepository.findAllByCpf(cpf);
+            return creditCardList
                     .stream()
                     .map(this::toCardDTO)
                     .collect(Collectors.toList());

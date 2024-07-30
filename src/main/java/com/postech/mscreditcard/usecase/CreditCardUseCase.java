@@ -1,6 +1,6 @@
 package com.postech.mscreditcard.usecase;
 
-import com.postech.mscreditcard.dto.CardDTO;
+import com.postech.mscreditcard.dto.CreditCardDTO;
 import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
@@ -21,15 +21,15 @@ public class CreditCardUseCase {
         this.creditCardGateway = creditCardGateway;
     }
 
-    public void validateCardCreation(CardDTO cardDTO) {
+    public void validateCardCreation(CreditCardDTO creditCardDTO) {
 
         try {
-            if (cardDTO == null) {
+            if (creditCardDTO == null) {
                 throw new IllegalArgumentException("Cartão inválido.");
             }
-            log.info("Validate card creation {}", cardDTO.toString());
-            List<CardDTO> creditCardDTOList = creditCardGateway.listAllCustomerCards(cardDTO.getCpf());
-            if (creditCardDTOList.size() == MAX_CARDS){
+            log.info("Validate card creation {}", creditCardDTO.toString());
+            List<CreditCardDTO> creditCreditCardDTOList = creditCardGateway.listAllCustomerCards(creditCardDTO.getCpf());
+            if (creditCreditCardDTOList.size() == MAX_CARDS){
                 throw new MaxCardsException();
             }
         } catch (UnknownErrorException ue) {

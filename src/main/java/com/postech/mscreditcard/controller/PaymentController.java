@@ -2,9 +2,7 @@ package com.postech.mscreditcard.controller;
 
 import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.entity.Payment;
-import com.postech.mscreditcard.gateway.CreditCardGateway;
-import com.postech.mscreditcard.security.SecurityFilter;
-import com.postech.mscreditcard.security.TokenService;
+import com.postech.mscreditcard.gateway.PaymentGateway;
 import com.postech.mscreditcard.usecase.CreditCardUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,9 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    @Setter
-    @Autowired
-    private TokenService tokenService;
-
-    @Setter
-    @Autowired
-    private SecurityFilter securityFilter;
-
-    private final CreditCardGateway creditCardGateway;
+    private final PaymentGateway paymentGateway;
 
     @PostMapping("/pagamentos")
     @Operation(summary = "Create a new Payment with a DTO", responses = {
@@ -50,7 +38,7 @@ public class PaymentController {
         }
         try {
             CreditCardUseCase.validarPagamento(paymentDTO);
-            PaymentDTO paymentCreated = creditCardGateway.createPayment(paymentDTO);
+            PaymentDTO paymentCreated = paymentGateway.createPayment(paymentDTO);
             return new ResponseEntity<>(paymentCreated, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -67,7 +55,7 @@ public class PaymentController {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        return new ResponseEntity<>(creditCardGateway.listAllPayments(), HttpStatus.OK);
+        return new ResponseEntity<>(paymentGateway.listAllPayments(), HttpStatus.OK);
     }
 
 }

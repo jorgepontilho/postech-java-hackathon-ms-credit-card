@@ -4,8 +4,6 @@ import com.postech.mscreditcard.dto.CustomerDTO;
 import com.postech.mscreditcard.entity.Customer;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CustomerGateway;
-import com.postech.mscreditcard.security.SecurityFilter;
-import com.postech.mscreditcard.security.TokenService;
 import com.postech.mscreditcard.usecase.CustomerUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,19 +27,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerController {
 
-    @Setter
-    @Autowired
-    private TokenService tokenService;
-
-    @Setter
-    @Autowired
-    private SecurityFilter securityFilter;
-
     @Autowired
     private CustomerUseCase customerUseCase;
 
     private final CustomerGateway customerGateway;
-
 
     @PostMapping("/cliente")
     @Operation(summary = "Create a new Customer with a DTO", responses = {
