@@ -1,7 +1,6 @@
 package com.postech.mscreditcard.usecase;
 
 import com.postech.mscreditcard.dto.CreditCardDTO;
-import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
@@ -34,11 +33,6 @@ public class CreditCardUseCase {
             }
         } catch (UnknownErrorException ue) {
             throw ue;
-        }
-    }
-    public static void validarPagamento(PaymentDTO paymentDTO) {
-        if (paymentDTO == null) {
-            throw new IllegalArgumentException("Pagamento inválido.");
         }
     }
 

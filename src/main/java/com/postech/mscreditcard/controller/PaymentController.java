@@ -4,6 +4,7 @@ import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.entity.Payment;
 import com.postech.mscreditcard.gateway.PaymentGateway;
 import com.postech.mscreditcard.usecase.CreditCardUseCase;
+import com.postech.mscreditcard.usecase.PaymentUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,7 +38,7 @@ public class PaymentController {
                     .body(request.getAttribute("error"));
         }
         try {
-            CreditCardUseCase.validarPagamento(paymentDTO);
+            PaymentUseCase.validateCardCreationPayment(paymentDTO);
             PaymentDTO paymentCreated = paymentGateway.createPayment(paymentDTO);
             return new ResponseEntity<>(paymentCreated, HttpStatus.CREATED);
         } catch (Exception e) {

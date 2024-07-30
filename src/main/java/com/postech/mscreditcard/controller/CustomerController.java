@@ -92,7 +92,7 @@ public class CustomerController {
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
             @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
-    public ResponseEntity<?> deleteCustomer(HttpServletRequest request, @PathVariable @Valid Long id) {
+    public ResponseEntity<?> deleteCustomer(HttpServletRequest request, @PathVariable @Valid Integer id) {
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
