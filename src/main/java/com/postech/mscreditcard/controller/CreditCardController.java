@@ -3,6 +3,7 @@ package com.postech.mscreditcard.controller;
 import com.postech.mscreditcard.dto.*;
 import com.postech.mscreditcard.entity.*;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
+import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
 import com.postech.mscreditcard.usecase.CreditCardUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,25 +32,28 @@ public class CreditCardController {
     private final CreditCardGateway creditCardGateway;
 
     @PostMapping("/cartao")
-    @Operation(summary = "Create a new CreditCard with a DTO", responses = {
-            @ApiResponse(description = "The new CreditCard was created", responseCode = "201", content = @Content(schema = @Schema(implementation = CreditCard.class))),
+    @Operation(summary = "Create a new Card with a DTO", responses = {
+            @ApiResponse(description = "The new Card was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Card.class))),
             @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
+            @ApiResponse(description = "Max cards reached", responseCode = "403", content = @Content(schema = @Schema(type = "string", example = "Número máx. de cartões excedido"))),
             @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
-    public ResponseEntity<?> createCard(HttpServletRequest request, @Valid @RequestBody CreditCardDTO creditCardDTO) {
+    public ResponseEntity<?> createCard(HttpServletRequest request, @Valid @RequestBody CardDTO cardDTO) {
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        log.info("PostMapping - createCard [{}]", creditCardDTO.getCpf());
+        log.info("PostMapping - createCard [{}]", cardDTO.getCpf());
         try {
-                creditCardUseCase.validateCardCreation(creditCardDTO);
-                CreditCardDTO cardCreated = creditCardGateway.createCard(creditCardDTO);
+                creditCardUseCase.validateCardCreation(cardDTO);
+                CardDTO cardCreated = creditCardGateway.createCard(cardDTO);
                 return new ResponseEntity<>(cardCreated, HttpStatus.CREATED);
 
         } catch (MaxCardsException me) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(me.getMessage());
+        }  catch (UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

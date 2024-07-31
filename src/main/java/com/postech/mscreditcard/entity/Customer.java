@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -16,7 +18,7 @@ import java.util.List;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(unique = true, nullable = false)
     private String cpf;
     private String name;
@@ -28,7 +30,9 @@ public class Customer {
     private String zipCode;
     private String country;
     @OneToMany
-    private List<CreditCard> creditCards;
+    private List<Card> cards;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public Customer(Integer id, String cpf) {
         this.id = id;

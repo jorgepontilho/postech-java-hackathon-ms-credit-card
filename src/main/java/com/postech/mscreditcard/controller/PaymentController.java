@@ -2,8 +2,12 @@ package com.postech.mscreditcard.controller;
 
 import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.entity.Payment;
+import com.postech.mscreditcard.exceptions.InvalidPaymentException;
+import com.postech.mscreditcard.exceptions.NoLimitCardException;
+import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.PaymentGateway;
-import com.postech.mscreditcard.usecase.CreditCardUseCase;
+import com.postech.mscreditcard.security.SecurityFilter;
+import com.postech.mscreditcard.security.TokenService;
 import com.postech.mscreditcard.usecase.PaymentUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,7 +16,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -24,24 +30,41 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PaymentController {
 
+    @Setter
+    @Autowired
+    private TokenService tokenService;
+
+    @Setter
+    @Autowired
+    private SecurityFilter securityFilter;
+
     private final PaymentGateway paymentGateway;
+    @Autowired
+    private PaymentUseCase paymentUseCase;
 
     @PostMapping("/pagamentos")
     @Operation(summary = "Create a new Payment with a DTO", responses = {
             @ApiResponse(description = "The new Payment was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Payment.class))),
-            @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando")))
+            @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
+            @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
+            @ApiResponse(description = "Card has no limit", responseCode = "402", content = @Content(schema = @Schema(type = "string", example = "Cartão sem limite"))),
+            @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
     public ResponseEntity<?> createPayment(HttpServletRequest request, @Valid @RequestBody PaymentDTO paymentDTO) {
-        log.info("PostMapping - createpayment [{}]", paymentDTO.getValor());
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
         try {
-            PaymentUseCase.validateCardCreationPayment(paymentDTO);
+            log.info("PostMapping - create payment [{}]", paymentDTO.getCpf());
+            paymentUseCase.validatePayment(paymentDTO);
             PaymentDTO paymentCreated = paymentGateway.createPayment(paymentDTO);
             return new ResponseEntity<>(paymentCreated, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (NoLimitCardException e) {
+            return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(e.getMessage());
+        }catch (InvalidPaymentException | UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }  catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -51,11 +74,12 @@ public class PaymentController {
             @ApiResponse(description = "List of all Payments", responseCode = "200"),
     })
     public ResponseEntity<?> listAllPayments(HttpServletRequest request) {
-        log.info("GetMapping - listAllPayments");
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
+        log.info("GetMapping - listAllPayments");
+
         return new ResponseEntity<>(paymentGateway.listAllPayments(), HttpStatus.OK);
     }
 
