@@ -34,7 +34,7 @@ public class Customer {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Customer(Integer id, String cpf) {
+    public Customer(Long id, String cpf) {
         this.id = id;
         this.cpf = cpf;
     }
