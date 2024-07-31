@@ -30,6 +30,11 @@ public class Customer {
     @OneToMany
     private List<CreditCard> creditCards;
 
+    public Customer(Integer id, String cpf) {
+        this.id = id;
+        this.cpf = cpf;
+    }
+
     public Customer(CustomerDTO customerDTO) {
         this.id = customerDTO.getId();
         this.cpf = customerDTO.getCpf();

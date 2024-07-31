@@ -31,7 +31,6 @@ public class CustomerGateway implements ICustomerGateway {
             log.error("Error creating customer", e);
             throw new UnknownErrorException("Error creating customer", e);
         }
-
     }
 
     @Override
@@ -47,9 +46,6 @@ public class CustomerGateway implements ICustomerGateway {
             throw new UnknownErrorException("Error finding customer", e);
         }
     }
-
-
-
 
     public List<CustomerDTO> listAllCustomers() {
         try {
@@ -76,7 +72,5 @@ public class CustomerGateway implements ICustomerGateway {
     private CustomerDTO toCustomerDTO(Customer customer) {
         return customer.toDTO();
     }
-
-
 
 }

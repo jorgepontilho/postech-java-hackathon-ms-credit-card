@@ -17,24 +17,36 @@ public class CreditCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    private String cpf;
-    private BigDecimal limitValue;
+
+    @Column(name = "card_number")
     private String cardNumber;
-    private String expirationDate;
+
+    @Column(name = "cpf")
+    private String cpf;
+
+    @Column(name = "cvv")
     private String cvv;
+
+    @Column(name = "expiration_date")
+    private String expirationDate;
+
+    @Column(name = "limit_value")
+    private BigDecimal limitValue;
+
     @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     public CreditCard(CreditCardDTO creditCardDTO) {
         this.id = creditCardDTO.getId();
-        this.cpf = creditCardDTO.getCpf();
-        this.limitValue = creditCardDTO.getLimite();
         this.cardNumber = creditCardDTO.getNumero();
+        this.cpf = creditCardDTO.getCpf();
         this.expirationDate = creditCardDTO.getDataValidade();
+        this.limitValue = creditCardDTO.getLimite();
         this.cvv = creditCardDTO.getCvv();
     }
 
     public CreditCardDTO toDTO() {
-        return new CreditCardDTO(this.id, this.cpf, this.limitValue, this.cardNumber, this.expirationDate, this.cvv);
+        return new CreditCardDTO(this.id, this.cardNumber, this.cpf, this.cvv,  this.expirationDate, this.limitValue);
     }
 }
