@@ -1,16 +1,32 @@
 {
 	"info": {
-		"_postman_id": "29340c6a-6157-4a45-9bd7-91e7fb3e08ff",
-		"name": "PosTech_Hackaton",
+		"_postman_id": "612167f6-b6cc-46e1-84f1-640c2b0c520c",
+		"name": "Hackathon",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12858581"
+		"_exporter_id": "3936081",
+		"_collection_link": "https://warped-space-1378.postman.co/workspace/Team-Workspace~12b840d4-b62d-4d10-8c05-2f64ca749b5b/collection/3936081-612167f6-b6cc-46e1-84f1-640c2b0c520c?action=share&source=collection_link&creator=3936081"
 	},
 	"item": [
 		{
-			"name": "0- Autenticação",
+			"name": "0 - Autenticação",
 			"item": [
 				{
-					"name": "0 - autenticacao",
+					"name": "0.1 - autenticacao",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GetToken\", function () {\r",
+									"    pm.globals.set(\"token\", pm.response.text());\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -41,7 +57,7 @@
 			]
 		},
 		{
-			"name": "1.0- Customer",
+			"name": "1.0 - Cliente",
 			"item": [
 				{
 					"name": "1.0 - cliente",
@@ -51,7 +67,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjY5ODF9.nO6Cju9i7tBVZJfnVVmD-YmXoBjAaXOadwTA2du6oZs",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -60,7 +76,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cpf\": \"01234567890\",\r\n    \"nome\": \"Bruno\",\r\n    \"email\": \"bruno@bruno.com\",\r\n    \"telefone\": \"11997516894\",\r\n    \"rua\": \"rua um\",\r\n    \"cidade\": \"Sao Paulo\",\r\n    \"estado\": \"SP\",\r\n    \"cep\": \"11111111\",\r\n    \"pais\": \"Brasil\"\r\n}",
+							"raw": "{\r\n    \"nome\": \"maiara o j\",\r\n    \"cpf\": \"39658152880\",\r\n    \"email\": \"maiara@fiap.com.br\",\r\n    \"telefone\": \"1134343434\",\r\n    \"rua\": \"rua da amargura\",\r\n    \"cep\": \"01511010\",\r\n    \"cidade\": \"sao paulo\",\r\n    \"estado\": \"SP\",\r\n    \"pais\": \"brasil\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -85,16 +101,6 @@
 				{
 					"name": "1.1 - cliente",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjY5ODF9.nO6Cju9i7tBVZJfnVVmD-YmXoBjAaXOadwTA2du6oZs",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -111,51 +117,30 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "2.0 - Cartão",
+			"item": [
 				{
-					"name": "1.2 - cliente",
+					"name": "2.1 - cartao",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjY5ODF9.nO6Cju9i7tBVZJfnVVmD-YmXoBjAaXOadwTA2du6oZs",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
 						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/cliente/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"cliente",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "2.0- Credit-Card",
-			"item": [
-				{
-					"name": "2.0 - cartao",
-					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": 0,\r\n  \"cpf\": \"string\",\r\n  \"limite\": 0,\r\n  \"numero\": \"string\",\r\n  \"data_validade\": \"string\",\r\n  \"cvv\": \"string\"\r\n}",
+							"raw": "{\r\n  \"cpf\": \"39658152880\",\r\n  \"limite\": 1000,\r\n  \"numero\": \"1111 1111 1111 2222\",\r\n  \"data_validade\": \"10/28\",\r\n  \"cvv\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -178,14 +163,14 @@
 					"response": []
 				},
 				{
-					"name": "2.1 - cartao",
+					"name": "2.2 - cartao",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjU5MTJ9.VWA-fcZQg_ERduu-20xhLGE2MpCPtJBDCKiJR7V0dEM",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -206,15 +191,30 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "3.0 - Payment",
+			"item": [
 				{
-					"name": "2.2 - pagamentos",
+					"name": "2.3 - pagamentos",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": 0,\r\n  \"cpf\": \"string\",\r\n  \"numero\": \"string\",\r\n  \"data_validade\": \"string\",\r\n  \"cvv\": \"string\",\r\n  \"valor\": 0\r\n}",
+							"raw": "{\r\n    \"cpf\": \"39658152880\",\r\n    \"numero\": \"1111 1111 1111 2222\",\r\n    \"cvv\": \"123\",\r\n    \"data_validade\": \"10/28\",\r\n    \"valor\": 500\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -237,14 +237,14 @@
 					"response": []
 				},
 				{
-					"name": "2.3 -pagamentos",
+					"name": "2.4 -pagamentos",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjU5MTJ9.VWA-fcZQg_ERduu-20xhLGE2MpCPtJBDCKiJR7V0dEM",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -289,13 +289,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"key": "token",
-			"value": "0",
-			"type": "string"
 		}
 	]
 }
