@@ -1,10 +1,10 @@
 package com.postech.mscreditcard.gateway;
 
-import com.postech.mscreditcard.dto.CreditCardDTO;
-import com.postech.mscreditcard.entity.CreditCard;
+import com.postech.mscreditcard.dto.CardDTO;
+import com.postech.mscreditcard.entity.Card;
 import com.postech.mscreditcard.entity.Customer;
 import com.postech.mscreditcard.exceptions.NotFoundException;
-import com.postech.mscreditcard.repository.CreditCardRepository;
+import com.postech.mscreditcard.repository.CardRepository;
 import com.postech.mscreditcard.repository.CustomerRepository;
 import com.postech.mscreditcard.utils.NewEntitiesHelper;
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.when;
 public class CreditCardGatewayTest {
 
     @Mock
-    private CreditCardRepository creditCardRepository;
+    private CardRepository cardRepository;
 
     @Mock
     private CustomerRepository customerRepository;
@@ -55,19 +56,19 @@ public class CreditCardGatewayTest {
         @Test
         void shouldCreateCreditCard() {
             // Arrange
-            CreditCard creditCardNew = NewEntitiesHelper.newCreditCard();
+            Card creditCardNew = NewEntitiesHelper.newCreditCard();
 
             Customer customer = NewEntitiesHelper.newCustomer();
             customer.setCpf(creditCardNew.getCpf());
             creditCardNew.setCustomer(customer);
 
-            CreditCardDTO creditCardDTO = creditCardNew.toDTO();
+            CardDTO creditCardDTO = creditCardNew.toDTO();
 
-            when(customerRepository.findByCpf(creditCardDTO.getCpf())).thenReturn(Optional.of(customer));
-            when(creditCardRepository.save(creditCardNew)).thenAnswer(invocation -> invocation.getArgument(0));
+            when(customerRepository.findByCpf(anyString())).thenReturn(Optional.of(customer));
+            when(cardRepository.save(any(Card.class))).thenReturn(creditCardNew);
 
             // Act
-            CreditCardDTO createdCard = creditCardGateway.createCard(creditCardDTO);
+            CardDTO createdCard = creditCardGateway.createCard(creditCardDTO);
 
             // Assert
             assertThat(createdCard).isNotNull();
@@ -76,7 +77,7 @@ public class CreditCardGatewayTest {
 
         @Test
         void shouldThrowNotFoundExceptionWhenCustomerNotFound() {
-            CreditCardDTO creditCardDTO = NewEntitiesHelper.newCreditCard().toDTO();
+            CardDTO creditCardDTO = NewEntitiesHelper.newCreditCard().toDTO();
 
             when(customerRepository.findByCpf("989898989-91")).thenReturn(Optional.empty());
 
@@ -88,17 +89,17 @@ public class CreditCardGatewayTest {
     class ListAllCards {
 
         @Test
-        void shouldReturnListOfCreditCardDTOs() {
+        void shouldReturnListOfCardDTOs() {
             // Arrange
-            CreditCard creditCard1 = NewEntitiesHelper.newCreditCard();
-            CreditCard creditCard2 = NewEntitiesHelper.newCreditCard();
-            creditCard2.setId(2);
+            Card creditCard1 = NewEntitiesHelper.newCreditCard();
+            Card creditCard2 = NewEntitiesHelper.newCreditCard();
+            creditCard2.setId(2L);
             creditCard2.setCpf("98765432100");
 
-            when(creditCardRepository.findAll()).thenReturn(Arrays.asList(creditCard1, creditCard2));
+            when(cardRepository.findAll()).thenReturn(Arrays.asList(creditCard1, creditCard2));
 
             // Act
-            List<CreditCardDTO> creditCardDTOList = creditCardGateway.listAllCards();
+            List<CardDTO> creditCardDTOList = creditCardGateway.listAllCards();
 
             // Assert
             assertThat(creditCardDTOList).isNotNull();
@@ -112,17 +113,17 @@ public class CreditCardGatewayTest {
     class ListAllCustomerCards {
 
         @Test
-        void shouldReturnListOfCreditCardDTOsForGivenCpf() {
+        void shouldReturnListOfCardDTOsForGivenCpf() {
             String cpf = "988989898-91";
-            CreditCard creditCard1 = NewEntitiesHelper.newCreditCard();
+            Card creditCard1 = NewEntitiesHelper.newCreditCard();
             creditCard1.setCpf(cpf);
-            CreditCard creditCard2 = NewEntitiesHelper.newCreditCard();
-            creditCard2.setId(2);
+            Card creditCard2 = NewEntitiesHelper.newCreditCard();
+            creditCard2.setId(2L);
             creditCard2.setCpf(cpf);
 
-            when(creditCardRepository.findAllByCpf(cpf)).thenReturn(Arrays.asList(creditCard1, creditCard2));
+            when(cardRepository.findAllByCpf(cpf)).thenReturn(Arrays.asList(creditCard1, creditCard2));
 
-            List<CreditCardDTO> creditCardDTOList = creditCardGateway.listAllCustomerCards(cpf);
+            List<CardDTO> creditCardDTOList = creditCardGateway.listAllCustomerCards(cpf);
 
             assertThat(creditCardDTOList).isNotNull();
             assertThat(creditCardDTOList).hasSize(2);
@@ -133,7 +134,7 @@ public class CreditCardGatewayTest {
         @Test
         void shouldThrowExceptionWhenErrorOccurs() {
             String cpf = "988989898-00";
-            when(creditCardRepository.findAllByCpf(anyString())).thenThrow(new RuntimeException("Database error"));
+            when(cardRepository.findAllByCpf(anyString())).thenThrow(new RuntimeException("Database error"));
 
             assertThrows(RuntimeException.class, () -> creditCardGateway.listAllCustomerCards(cpf));
         }

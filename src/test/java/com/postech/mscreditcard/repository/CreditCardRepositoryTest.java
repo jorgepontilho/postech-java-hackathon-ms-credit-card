@@ -1,6 +1,6 @@
 package com.postech.mscreditcard.repository;
 
-import com.postech.mscreditcard.entity.CreditCard;
+import com.postech.mscreditcard.entity.Card;
 import com.postech.mscreditcard.utils.NewEntitiesHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 public class CreditCardRepositoryTest {
 
     @Mock
-    private CreditCardRepository creditCardRepository;
+    private CardRepository creditCardRepository;
 
     AutoCloseable mock;
 
@@ -34,8 +34,8 @@ public class CreditCardRepositoryTest {
     @Test
     void shouldCreateANewCreditCard() {
 
-        CreditCard creditCard = NewEntitiesHelper.newCreditCard();
-        int id = creditCard.getId();
+        Card creditCard = NewEntitiesHelper.newCreditCard();
+        long id = creditCard.getId();
         creditCardRepository.save(creditCard);
 
         when(creditCardRepository.save(creditCard)).thenReturn(creditCard);
@@ -46,13 +46,13 @@ public class CreditCardRepositoryTest {
     @Test
     void shouldFindAllCreditCard() {
 
-        CreditCard creditCard = NewEntitiesHelper.newCreditCard();
-        int id = creditCard.getId();
+        Card creditCard = NewEntitiesHelper.newCreditCard();
+        long id = creditCard.getId();
         creditCardRepository.save(creditCard);
 
         when(creditCardRepository.findAll()).thenReturn(List.of(creditCard));
 
-        List<CreditCard> creditCards = creditCardRepository.findAll();
+        List<Card> creditCards = creditCardRepository.findAll();
 
         assertThat(creditCards).isNotEmpty();
         assertThat(creditCards.get(0)).isEqualTo(creditCard);
@@ -61,14 +61,14 @@ public class CreditCardRepositoryTest {
     @Test
     void shouldFindAllByCpf() {
         //Arrange
-        CreditCard creditCard = NewEntitiesHelper.newCreditCard();
-        int id = creditCard.getId();
+        Card creditCard = NewEntitiesHelper.newCreditCard();
+        long id = creditCard.getId();
         creditCardRepository.save(creditCard);
 
         when(creditCardRepository.findAllByCpf(creditCard.getCpf())).thenReturn(List.of(creditCard));
 
         //Act
-        List<CreditCard> creditCards = creditCardRepository.findAllByCpf(creditCard.getCpf());
+        List<Card> creditCards = creditCardRepository.findAllByCpf(creditCard.getCpf());
 
         //Assert
         assertThat(creditCards).isNotEmpty();

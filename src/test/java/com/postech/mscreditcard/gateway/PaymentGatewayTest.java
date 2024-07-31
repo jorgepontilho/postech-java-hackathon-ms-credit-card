@@ -2,7 +2,7 @@ package com.postech.mscreditcard.gateway;
 
 import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.entity.Payment;
-import com.postech.mscreditcard.repository.CreditCardRepository;
+import com.postech.mscreditcard.repository.CardRepository;
 import com.postech.mscreditcard.repository.CustomerRepository;
 import com.postech.mscreditcard.repository.PaymentRepository;
 import com.postech.mscreditcard.utils.NewEntitiesHelper;
@@ -16,14 +16,19 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 public class PaymentGatewayTest {
 
     @Mock
     private PaymentRepository paymentRepository;
+    @Mock
+    private CardRepository cardRepository;
 
     @InjectMocks
     private PaymentGateway paymentGateway;
@@ -48,7 +53,8 @@ public class PaymentGatewayTest {
             Payment payment = NewEntitiesHelper.newPayment();
             PaymentDTO paymentDTO = payment.toDTO();
 
-            when(paymentRepository.save(payment)).thenAnswer(invocation -> invocation.getArgument(0));
+            when(cardRepository.findByCardNumber(anyString())).thenReturn(Optional.of(NewEntitiesHelper.newCreditCard()));
+            when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
             PaymentDTO createdPayment = paymentGateway.createPayment(paymentDTO);
 
@@ -64,7 +70,7 @@ public class PaymentGatewayTest {
         void shouldReturnListOfPaymentDTOs() {
             Payment payment1 = NewEntitiesHelper.newPayment();
             Payment payment2 = NewEntitiesHelper.newPayment();
-            payment2.setId(2);
+            payment2.setId(2L);
 
             when(paymentRepository.findAll()).thenReturn(Arrays.asList(payment1, payment2));
 

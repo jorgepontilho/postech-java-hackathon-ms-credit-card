@@ -35,7 +35,7 @@ public class CustomerRepositoryTest {
     void shouldCreateANewCustomer() {
 
         Customer customer = NewEntitiesHelper.newCustomer();
-        int id = customer.getId();
+        long id = customer.getId();
         customerRepository.save(customer);
 
         when(customerRepository.save(customer)).thenReturn(customer);
@@ -47,7 +47,7 @@ public class CustomerRepositoryTest {
     void shouldFindByCpf() {
 
         Customer customer = NewEntitiesHelper.newCustomer();
-        int id = customer.getId();
+        long id = customer.getId();
         customerRepository.save(customer);
 
         when(customerRepository.findByCpf(customer.getCpf())).thenReturn(Optional.of(customer));

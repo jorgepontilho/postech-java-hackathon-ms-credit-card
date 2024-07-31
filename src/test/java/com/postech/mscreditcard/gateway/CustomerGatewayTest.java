@@ -90,7 +90,7 @@ public class CustomerGatewayTest {
         void shouldReturnListOfCustomerDTOs() {
             Customer customer1 = NewEntitiesHelper.newCustomer();
             Customer customer2 = NewEntitiesHelper.newCustomer();
-            customer2.setId(2);
+            customer2.setId(2L);
             customer2.setCpf("989898982-91");
 
             when(customerRepository.findAll()).thenReturn(Arrays.asList(customer1, customer2));

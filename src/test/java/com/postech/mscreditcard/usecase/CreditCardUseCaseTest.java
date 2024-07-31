@@ -1,6 +1,6 @@
 package com.postech.mscreditcard.usecase;
 
-import com.postech.mscreditcard.dto.CreditCardDTO;
+import com.postech.mscreditcard.dto.CardDTO;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
@@ -45,13 +45,13 @@ public class CreditCardUseCaseTest {
     class ValidateCardCreation {
 
         @Test
-        void shouldThrowExceptionWhenCreditCardDTOIsNull() {
+        void shouldThrowExceptionWhenCardDTOIsNull() {
             assertThrows(IllegalArgumentException.class, () -> creditCardUseCase.validateCardCreation(null));
         }
 
         @Test
         void shouldNotThrowExceptionWhenCustomerHasLessThanMaxCards() {
-            CreditCardDTO creditCardDTO = new CreditCardDTO();
+            CardDTO creditCardDTO = new CardDTO();
             creditCardDTO.setCpf("12345678900");
 
             when(creditCardGateway.listAllCustomerCards(anyString())).thenReturn(Collections.emptyList());
@@ -61,17 +61,17 @@ public class CreditCardUseCaseTest {
 
         @Test
         void shouldThrowMaxCardsExceptionWhenCustomerHasMaxCards() {
-            CreditCardDTO creditCardDTO = new CreditCardDTO();
+            CardDTO creditCardDTO = new CardDTO();
             creditCardDTO.setCpf("12345678900");
 
-            when(creditCardGateway.listAllCustomerCards(anyString())).thenReturn(Arrays.asList(new CreditCardDTO(), new CreditCardDTO()));
+            when(creditCardGateway.listAllCustomerCards(anyString())).thenReturn(Arrays.asList(new CardDTO(), new CardDTO()));
 
             assertThrows(MaxCardsException.class, () -> creditCardUseCase.validateCardCreation(creditCardDTO));
         }
 
         @Test
         void shouldThrowUnknownErrorExceptionWhenUnknownErrorOccurs() {
-            CreditCardDTO creditCardDTO = new CreditCardDTO();
+            CardDTO creditCardDTO = new CardDTO();
             creditCardDTO.setCpf("989898989-91");
 
             when(creditCardGateway.listAllCustomerCards(anyString())).thenThrow(new UnknownErrorException());

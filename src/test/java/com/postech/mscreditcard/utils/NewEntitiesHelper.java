@@ -1,24 +1,29 @@
 package com.postech.mscreditcard.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.postech.mscreditcard.entity.CreditCard;
+import com.postech.mscreditcard.entity.Card;
 import com.postech.mscreditcard.entity.Customer;
 import com.postech.mscreditcard.entity.Payment;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class NewEntitiesHelper {
 
+    public static final String CARD_NUMBER = "1278 8798 9878 7987";
+    public static final String EXPIRATION_DATE = "01/26";
+    public static final String CPF = "19469300219";
+
     public static Customer newCustomer() {
-        return new Customer(1, "194693002-19");
+        return new Customer(1L, CPF);
     }
 
-    public static CreditCard newCreditCard() {
-        return new CreditCard(1, "1278-8798-9878-7987", "194693002-19", "111", "01/26", BigDecimal.valueOf(100.00), new Customer(2, "124693002-11"));
+    public static Card newCreditCard() {
+        return new Card(1L, CPF, new BigDecimal("1000"), CARD_NUMBER, EXPIRATION_DATE, "111", LocalDateTime.now(), newCustomer());
     }
 
     public static Payment newPayment() {
-        return new Payment(1, "194693002-19", "1278-8798-9878-7987", "01/26", "111", 100.00);
+        return new Payment(1L, "c5f200ff-6075-4fb7-b5bd-07e930bc9b95", newCustomer(), newCreditCard(), new BigDecimal("100"), LocalDateTime.now());
     }
 
     public static String asJsonString(final Object obj) {

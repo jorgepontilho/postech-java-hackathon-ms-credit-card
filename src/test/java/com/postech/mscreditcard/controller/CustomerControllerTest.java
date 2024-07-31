@@ -1,7 +1,7 @@
 package com.postech.mscreditcard.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.postech.mscreditcard.dto.CustomerDTO;
+import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CustomerGateway;
 import com.postech.mscreditcard.usecase.CustomerUseCase;
 import com.postech.mscreditcard.utils.GlobalExceptionHandler;
@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootApplication
 public class CustomerControllerTest {
 
-    @Autowired
+    public static final String VALID_CPF = "51958902004";
     private MockMvc mockMvc;
 
     @Mock
@@ -41,7 +44,7 @@ public class CustomerControllerTest {
     @BeforeEach
     void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
-        CustomerController customerController = new CustomerController(customerGateway);
+        CustomerController customerController = new CustomerController(customerUseCase, customerGateway);
 
         mockMvc = MockMvcBuilders.standaloneSetup(customerController).setControllerAdvice(new GlobalExceptionHandler()).addFilter((request, response, chain) -> {
             response.setCharacterEncoding("UTF-8");
@@ -60,13 +63,14 @@ public class CustomerControllerTest {
         @Test
         void shouldCreateCustomer() throws Exception {
             CustomerDTO customerDTO = new CustomerDTO();
-            customerDTO.setCpf("123.456.789-00");
-            customerDTO.setNome("moe");
+            customerDTO.setCpf(VALID_CPF);
+            customerDTO.setNome("moe na");
             customerDTO.setEmail("m@example.com");
             customerDTO.setTelefone("1234567890");
+            customerDTO.setCidade("Some City");
             customerDTO.setRua("mirabeau");
             customerDTO.setEstado("AA");
-            customerDTO.setCep("06100");
+            customerDTO.setCep("01502001");
             customerDTO.setPais("FR");
 
             when(customerUseCase.canCreateCustomer(any(CustomerDTO.class))).thenReturn(true);
@@ -83,7 +87,7 @@ public class CustomerControllerTest {
     @Test
     void shouldReturnBadRequestWhenCustomerExists() throws Exception {
         CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setCpf("123.456.789-00");
+        customerDTO.setCpf(VALID_CPF);
         customerDTO.setNome("John Doe");
         customerDTO.setEmail("john.doe@example.com");
         customerDTO.setTelefone("1234567890");
@@ -105,7 +109,7 @@ public class CustomerControllerTest {
     @Test
     void shouldReturnInternalServerErrorOnUnknownError() throws Exception {
         CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setCpf("123.456.789-00");
+        customerDTO.setCpf(VALID_CPF);
         customerDTO.setNome("John Doe");
         customerDTO.setEmail("john.doe@example.com");
         customerDTO.setTelefone("1234567890");
@@ -115,7 +119,7 @@ public class CustomerControllerTest {
         customerDTO.setCep("12345-678");
         customerDTO.setPais("BR");
 
-        when(customerUseCase.canCreateCustomer(any(CustomerDTO.class))).thenThrow(new RuntimeException("Unknown error"));
+        when(customerUseCase.canCreateCustomer(any())).thenThrow(new UnknownErrorException("Unknown error", null));
 
         mockMvc.perform(post("/api/cliente")
                         .contentType(MediaType.APPLICATION_JSON)
