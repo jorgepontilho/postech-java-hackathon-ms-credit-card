@@ -2,10 +2,7 @@ package com.postech.mscreditcard.security;
 
 import java.io.IOException;
 
-import com.postech.mscreditcard.dto.CustomerDTO;
-import com.postech.mscreditcard.entity.Customer;
 import com.postech.mscreditcard.entity.User;
-import com.postech.mscreditcard.gateway.CreditCardGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

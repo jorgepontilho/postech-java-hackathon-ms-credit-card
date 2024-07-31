@@ -1,4 +1,4 @@
-package com.postech.mscreditcard.utils;
+package com.postech.mscreditcard.exceptions;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

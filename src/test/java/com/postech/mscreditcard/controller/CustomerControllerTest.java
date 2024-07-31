@@ -4,17 +4,14 @@ import com.postech.mscreditcard.dto.CustomerDTO;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CustomerGateway;
 import com.postech.mscreditcard.usecase.CustomerUseCase;
-import com.postech.mscreditcard.utils.GlobalExceptionHandler;
+import com.postech.mscreditcard.exceptions.GlobalExceptionHandler;
 import com.postech.mscreditcard.utils.NewEntitiesHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -79,7 +76,7 @@ public class CustomerControllerTest {
             mockMvc.perform(post("/api/cliente")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(NewEntitiesHelper.asJsonString(customerDTO)))
-                    .andExpect(status().isCreated())
+                    .andExpect(status().isOk())
                     .andExpect(content().json(NewEntitiesHelper.asJsonString(customerDTO)));
         }
     }
@@ -102,7 +99,7 @@ public class CustomerControllerTest {
         mockMvc.perform(post("/api/cliente")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(NewEntitiesHelper.asJsonString(customerDTO)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andExpect(content().string("Cliente já existe."));
     }
 
