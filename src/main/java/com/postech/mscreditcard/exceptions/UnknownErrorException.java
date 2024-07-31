@@ -8,4 +8,8 @@ public class UnknownErrorException extends RuntimeException {
     public UnknownErrorException(String errorMessage, Exception e) {
         super(errorMessage, e);
     }
+
+    public UnknownErrorException() {
+        super();
+    }
 }
