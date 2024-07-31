@@ -52,7 +52,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         if (token == null) {
             request.setAttribute("error_code", HttpStatus.UNAUTHORIZED);
-            request.setAttribute("error", "Acesso não autorizado");
+            request.setAttribute("error", "Bearer token inválido");
             return;
         }
 

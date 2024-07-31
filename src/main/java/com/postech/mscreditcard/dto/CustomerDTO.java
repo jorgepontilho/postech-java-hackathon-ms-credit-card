@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @Data
 @NoArgsConstructor
 public class CustomerDTO {
-    Long id;
+    Integer id;
     @CPF(message = "CPF Inválido")
     @NotBlank(message = "CPF é obrigatório")
     private String cpf;
@@ -34,7 +34,7 @@ public class CustomerDTO {
     @NotBlank(message = "País é obrigatório")
     private String pais;
 
-    public CustomerDTO(Long id, String cpf, String name, String email, String phone, String street, String city, String uf, String zipCode, String country) {
+    public CustomerDTO(Integer id, String cpf, String name, String email, String phone, String street, String city, String uf, String zipCode, String country) {
         this.id = id;
         this.cpf = cpf;
         this.nome = name;

@@ -3,7 +3,6 @@ package com.postech.mscreditcard.controller;
 import com.postech.mscreditcard.dto.UserDTO;
 import com.postech.mscreditcard.entity.User;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
-import com.postech.mscreditcard.security.SecurityFilter;
 import com.postech.mscreditcard.security.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,10 +26,6 @@ public class AuthenticationController {
     @Setter
     @Autowired
     private TokenService tokenService;
-
-    @Setter
-    @Autowired
-    private SecurityFilter securityFilter;
 
     private final CreditCardGateway creditCardGateway;
 

@@ -1,22 +1,66 @@
 {
 	"info": {
-		"_postman_id": "4da9b271-7f18-425d-affc-8e2bb79677df",
-		"name": "Hackathon",
+		"_postman_id": "29340c6a-6157-4a45-9bd7-91e7fb3e08ff",
+		"name": "PosTech_Hackaton",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "15611332"
+		"_exporter_id": "12858581"
 	},
 	"item": [
+		{
+			"name": "0- Autenticação",
+			"item": [
+				{
+					"name": "0 - autenticacao",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuario\":\"adj2\",\r\n    \"senha\":\"adj@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/autenticacao",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"autenticacao"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "1.0- Customer",
 			"item": [
 				{
 					"name": "1.0 - cliente",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjY5ODF9.nO6Cju9i7tBVZJfnVVmD-YmXoBjAaXOadwTA2du6oZs",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cpf\": \"01234567890\",\r\n    \"nome\": \"Tiago\",\r\n    \"email\": \"tiago@tiago.com\",\r\n    \"telefone\": \"1198765432\",\r\n    \"rua\": \"rua um\",\r\n    \"cidade\": \"Guarulhos\",\r\n    \"estado\": \"SP\",\r\n    \"cep\": \"11111111\",\r\n    \"pais\": \"Brasil\"\r\n}",
+							"raw": "{\r\n    \"cpf\": \"01234567890\",\r\n    \"nome\": \"Bruno\",\r\n    \"email\": \"bruno@bruno.com\",\r\n    \"telefone\": \"11997516894\",\r\n    \"rua\": \"rua um\",\r\n    \"cidade\": \"Sao Paulo\",\r\n    \"estado\": \"SP\",\r\n    \"cep\": \"11111111\",\r\n    \"pais\": \"Brasil\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -41,6 +85,16 @@
 				{
 					"name": "1.1 - cliente",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjY5ODF9.nO6Cju9i7tBVZJfnVVmD-YmXoBjAaXOadwTA2du6oZs",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -57,28 +111,24 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "2.0- Credit-Card",
-			"item": [
+				},
 				{
-					"name": "2.0 - autenticacao",
+					"name": "1.2 - cliente",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"usuario\": \"string\",\r\n  \"senha\": \"string\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjY5ODF9.nO6Cju9i7tBVZJfnVVmD-YmXoBjAaXOadwTA2du6oZs",
+									"type": "string"
 								}
-							}
+							]
 						},
+						"method": "DELETE",
+						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/autenticacao",
+							"raw": "http://localhost:8080/api/cliente/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -86,14 +136,20 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"autenticacao"
+								"cliente",
+								"1"
 							]
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "2.0- Credit-Card",
+			"item": [
 				{
-					"name": "2.1 - cartao",
+					"name": "2.0 - cartao",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -122,8 +178,18 @@
 					"response": []
 				},
 				{
-					"name": "2.2 - cartao",
+					"name": "2.1 - cartao",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjU5MTJ9.VWA-fcZQg_ERduu-20xhLGE2MpCPtJBDCKiJR7V0dEM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -142,7 +208,7 @@
 					"response": []
 				},
 				{
-					"name": "2.3 - pagamentos",
+					"name": "2.2 - pagamentos",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -171,8 +237,18 @@
 					"response": []
 				},
 				{
-					"name": "2.4 -pagamentos",
+					"name": "2.3 -pagamentos",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI0MjU5MTJ9.VWA-fcZQg_ERduu-20xhLGE2MpCPtJBDCKiJR7V0dEM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {

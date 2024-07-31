@@ -62,7 +62,7 @@ public class CustomerGateway implements ICustomerGateway {
         }
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         try {
             customerRepository.deleteById(id);
         } catch (Exception e) {

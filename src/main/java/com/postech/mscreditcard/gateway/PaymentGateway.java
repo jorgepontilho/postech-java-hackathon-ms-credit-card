@@ -10,6 +10,9 @@ import com.postech.mscreditcard.repository.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Component
 public class PaymentGateway implements IPaymentGateway {
@@ -33,7 +36,16 @@ public class PaymentGateway implements IPaymentGateway {
         return paymentNew.toDTO();
     }
 
-    public Object listAllPayments() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private PaymentDTO toPaymentDTO(Payment payment) {
+        return payment.toDTO();
     }
+
+    public List<PaymentDTO> listAllPayments() {
+        List<Payment> paymentList = paymentRepository.findAll();
+        return paymentList
+                .stream()
+                .map(this::toPaymentDTO)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -1,7 +1,7 @@
 # postech-java-ms-credit-card
-Fiap - Pós Tech - Tech Challenge 5 - ms-credit-card
+Fiap - Pós Tech - Hackaton - ms-credit-card
 
-Este projeto é uma API desenvolvida com Java e Spring Boot, designada para Gerenciamento de Usuários
+Este projeto é uma API desenvolvida com Java e Spring Boot, designada para pagamentos de operadoras de cartão de crédito.
 
 ## Tecnologias Utilizadas
 

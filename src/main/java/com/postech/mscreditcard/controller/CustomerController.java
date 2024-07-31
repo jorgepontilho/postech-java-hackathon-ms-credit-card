@@ -4,8 +4,6 @@ import com.postech.mscreditcard.dto.CustomerDTO;
 import com.postech.mscreditcard.entity.Customer;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CustomerGateway;
-import com.postech.mscreditcard.security.SecurityFilter;
-import com.postech.mscreditcard.security.TokenService;
 import com.postech.mscreditcard.usecase.CustomerUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,19 +27,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerController {
 
-    @Setter
-    @Autowired
-    private TokenService tokenService;
-
-    @Setter
-    @Autowired
-    private SecurityFilter securityFilter;
-
     @Autowired
     private CustomerUseCase customerUseCase;
 
     private final CustomerGateway customerGateway;
-
 
     @PostMapping("/cliente")
     @Operation(summary = "Create a new Customer with a DTO", responses = {
@@ -104,7 +92,7 @@ public class CustomerController {
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
             @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
-    public ResponseEntity<?> deleteCustomer(HttpServletRequest request, @PathVariable @Valid Long id) {
+    public ResponseEntity<?> deleteCustomer(HttpServletRequest request, @PathVariable @Valid Integer id) {
         if (request.getAttribute("error") != null) {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
