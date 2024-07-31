@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,8 +23,6 @@ public class CreditCardGateway implements ICreditCardGateway {
     public String PASSWORD;
     private final CardRepository cardRepository;
     private final CustomerRepository customerRepository;
-
-
 
 
     public CreditCardGateway(CardRepository cardRepository, CustomerRepository customerRepository) {
@@ -54,7 +53,7 @@ public class CreditCardGateway implements ICreditCardGateway {
             cardNew.setCustomer(customer);
             cardNew = cardRepository.save(cardNew);
             return cardNew.toDTO();
-        } catch (Exception e ){
+        } catch (Exception e) {
             log.error("Error creating card", e);
             throw e;
         }
@@ -76,7 +75,7 @@ public class CreditCardGateway implements ICreditCardGateway {
     @Override
     public List<CardDTO> listAllCustomerCards(String cpf) {
         try {
-            log.info("List all customer cards {}",cpf);
+            log.info("List all customer cards {}", cpf);
             List<Card> cardList = cardRepository.findAllByCpf(cpf);
             return cardList
                     .stream()
@@ -84,6 +83,37 @@ public class CreditCardGateway implements ICreditCardGateway {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error listing customer cards", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public CardDTO findCustomerCard(String cpf, String cardNumber) {
+        try {
+            log.info("Find customer card {}", cpf);
+            CardDTO cardDto = null;
+            Card card = cardRepository.findByCpfAndCardNumber(cpf, cardNumber);
+            if (card != null) {
+                cardDto = card.toDTO();
+            }
+            return cardDto;
+        } catch (Exception e) {
+            log.error("Error find customer card", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public List<CardDTO> listAllCards(String number) {
+        try {
+            log.info("List all cards {}", number);
+            Optional<Card> cardList = cardRepository.findByCardNumber(number);
+            return cardList
+                    .stream()
+                    .map(this::toCardDTO)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error listing cards", e);
             throw e;
         }
     }

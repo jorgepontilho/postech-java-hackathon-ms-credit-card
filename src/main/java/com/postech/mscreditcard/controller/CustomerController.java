@@ -32,7 +32,7 @@ public class CustomerController {
 
     @PostMapping("/cliente")
     @Operation(summary = "Create a new Customer with a DTO", responses = {
-            @ApiResponse(description = "The new Customer was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Customer.class))),
+            @ApiResponse(description = "The new Customer was created", responseCode = "200", content = @Content(schema = @Schema(implementation = Customer.class))),
             @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
             @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
@@ -47,9 +47,9 @@ public class CustomerController {
         try {
             if (customerUseCase.canCreateCustomer(customerDTO)) {
                 CustomerDTO customerCreated = customerGateway.createCustomer(customerDTO);
-                return new ResponseEntity<>(customerCreated, HttpStatus.CREATED);
+                return new ResponseEntity<>(customerCreated, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Cliente já existe.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Cliente já existe.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
         } catch (UnknownErrorException e) {

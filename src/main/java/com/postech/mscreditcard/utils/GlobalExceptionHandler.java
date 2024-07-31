@@ -21,6 +21,6 @@ public class GlobalExceptionHandler {
         // Monta a mensagem de erro
         String mensagemErro = "Campos inválidos ou faltando: " + camposComErro;
 
-        return ResponseEntity.badRequest().body(mensagemErro);
+        return ResponseEntity.internalServerError().body(mensagemErro);
     }
 }

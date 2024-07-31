@@ -34,8 +34,8 @@ public class PaymentUseCase {
 
         try {
             log.info("Validate payment creation {} - {}", paymentDTO.getCpf(), paymentDTO.getValor());
-            List<CardDTO> creditCardDTOList = creditCardGateway.listAllCustomerCards(paymentDTO.getCpf());
-            if (creditCardDTOList == null || creditCardDTOList.isEmpty()){
+            CardDTO creditCardDTO = creditCardGateway.findCustomerCard(paymentDTO.getCpf(),paymentDTO.getNumero());
+            if (creditCardDTO == null){
                 throw new InvalidPaymentException("Cartão inválido");
             }
 

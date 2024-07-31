@@ -39,12 +39,12 @@ public class AuthenticationController {
         try {
             UserDTO userDTO = creditCardGateway.findByLoginAndPassword(user.getUsuario(), user.getSenha());
             if (userDTO == null) {
-                return new ResponseEntity<>("Login ou Senha inválida.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Login ou Senha inválida.", HttpStatus.UNAUTHORIZED);
             }
             String token = tokenService.generateToken(userDTO);
             return ResponseEntity.ok(token);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 

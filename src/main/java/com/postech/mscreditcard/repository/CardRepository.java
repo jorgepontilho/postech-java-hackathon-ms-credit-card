@@ -12,4 +12,5 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
 
     List<Card> findAllByCpf(String cpf);
     Optional<Card> findByCardNumber(String cardNumber);
+    Card findByCpfAndCardNumber(String cpf, String cardNumber);
 }

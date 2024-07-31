@@ -2,6 +2,7 @@ package com.postech.mscreditcard.usecase;
 
 import com.postech.mscreditcard.dto.CardDTO;
 import com.postech.mscreditcard.dto.PaymentDTO;
+import com.postech.mscreditcard.exceptions.CardExistException;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
@@ -29,8 +30,14 @@ public class CreditCardUseCase {
             log.info("Validate card creation {}", cardDTO.toString());
             List<CardDTO> creditCardDTOList = creditCardGateway.listAllCustomerCards(cardDTO.getCpf());
             if (creditCardDTOList.size() == MAX_CARDS){
-                throw new MaxCardsException();
+                throw new MaxCardsException("Máximo de cartões atingido");
             }
+
+            creditCardDTOList = creditCardGateway.listAllCards(cardDTO.getNumero());
+            if (!creditCardDTOList.isEmpty()){
+                throw new CardExistException("Número de Cartão já existe.");
+            }
+
         } catch (UnknownErrorException ue) {
             throw ue;
         }

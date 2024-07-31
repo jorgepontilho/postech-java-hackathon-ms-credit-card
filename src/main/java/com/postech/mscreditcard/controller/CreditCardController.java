@@ -2,6 +2,7 @@ package com.postech.mscreditcard.controller;
 
 import com.postech.mscreditcard.dto.*;
 import com.postech.mscreditcard.entity.*;
+import com.postech.mscreditcard.exceptions.CardExistException;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
@@ -33,7 +34,7 @@ public class CreditCardController {
 
     @PostMapping("/cartao")
     @Operation(summary = "Create a new Card with a DTO", responses = {
-            @ApiResponse(description = "The new Card was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Card.class))),
+            @ApiResponse(description = "The new Card was created", responseCode = "200", content = @Content(schema = @Schema(implementation = Card.class))),
             @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
             @ApiResponse(description = "Max cards reached", responseCode = "403", content = @Content(schema = @Schema(type = "string", example = "Número máx. de cartões excedido"))),
@@ -48,13 +49,13 @@ public class CreditCardController {
         try {
                 creditCardUseCase.validateCardCreation(cardDTO);
                 CardDTO cardCreated = creditCardGateway.createCard(cardDTO);
-                return new ResponseEntity<>(cardCreated, HttpStatus.CREATED);
+                return new ResponseEntity<>(cardCreated, HttpStatus.OK);
 
         } catch (MaxCardsException me) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(me.getMessage());
-        }  catch (UnknownErrorException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        } catch (Exception e) {
+        } catch (CardExistException | UnknownErrorException me) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(me.getMessage());
+        }  catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

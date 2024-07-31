@@ -11,4 +11,8 @@ public interface ICreditCardGateway {
     CardDTO createCard(CardDTO cardDTO);
 
     List<CardDTO> listAllCustomerCards(String cpf);
+
+    CardDTO findCustomerCard(String cpf, String cardNumber);
+
+    List<CardDTO> listAllCards(String number);
 }

@@ -44,7 +44,7 @@ public class PaymentController {
 
     @PostMapping("/pagamentos")
     @Operation(summary = "Create a new Payment with a DTO", responses = {
-            @ApiResponse(description = "The new Payment was created", responseCode = "201", content = @Content(schema = @Schema(implementation = Payment.class))),
+            @ApiResponse(description = "The new Payment was created", responseCode = "200", content = @Content(schema = @Schema(implementation = Payment.class))),
             @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
             @ApiResponse(description = "Card has no limit", responseCode = "402", content = @Content(schema = @Schema(type = "string", example = "Cartão sem limite"))),
@@ -59,7 +59,7 @@ public class PaymentController {
             log.info("PostMapping - create payment [{}]", paymentDTO.getCpf());
             paymentUseCase.validatePayment(paymentDTO);
             PaymentDTO paymentCreated = paymentGateway.createPayment(paymentDTO);
-            return new ResponseEntity<>(paymentCreated, HttpStatus.CREATED);
+            return new ResponseEntity<>(paymentCreated, HttpStatus.OK);
         } catch (NoLimitCardException e) {
             return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(e.getMessage());
         }catch (InvalidPaymentException | UnknownErrorException e) {
