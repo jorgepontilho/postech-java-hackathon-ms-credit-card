@@ -33,12 +33,12 @@ public class CreditCardDTO {
     @Size(min = 3, max = 4, message = "CVV tem que ser entre 3 ou 4 digitos")
     private String cvv;
 
-    public CreditCardDTO(Integer id, String cpf, BigDecimal limitValue, String cardNumber, String expirationDate, String cvv) {
+    public CreditCardDTO(Integer id, String cardNumber, String cpf, String cvv, String expirationDate, BigDecimal limitValue) {
         this.id = id;
-        this.cpf = cpf;
-        this.limite = limitValue;
         this.numero = cardNumber;
-        this.dataValidade = expirationDate;
+        this.cpf = cpf;
         this.cvv = cvv;
+        this.dataValidade = expirationDate;
+        this.limite = limitValue;
     }
 }
