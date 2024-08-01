@@ -30,17 +30,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    @Setter
-    @Autowired
-    private TokenService tokenService;
-
-    @Setter
-    @Autowired
-    private SecurityFilter securityFilter;
-
     private final PaymentGateway paymentGateway;
     @Autowired
-    private PaymentUseCase paymentUseCase;
+    private final PaymentUseCase paymentUseCase;
 
     @PostMapping("/pagamentos")
     @Operation(summary = "Create a new Payment with a DTO", responses = {
@@ -62,9 +54,9 @@ public class PaymentController {
             return new ResponseEntity<>(paymentCreated, HttpStatus.OK);
         } catch (NoLimitCardException e) {
             return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(e.getMessage());
-        }catch (InvalidPaymentException | UnknownErrorException e) {
+        } catch (InvalidPaymentException | UnknownErrorException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }  catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

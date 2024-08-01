@@ -82,6 +82,23 @@ public class CustomerControllerTest {
     }
 
     @Test
+    void shouldReturnInternalServerError() throws Exception {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCpf(VALID_CPF);
+        customerDTO.setNome("moe na");
+        customerDTO.setEmail("m@example.com");
+        customerDTO.setTelefone("1234567890");
+
+        when(customerUseCase.canCreateCustomer(any(CustomerDTO.class))).thenReturn(true);
+        when(customerGateway.createCustomer(any(CustomerDTO.class))).thenReturn(customerDTO);
+
+        mockMvc.perform(post("/api/cliente")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(NewEntitiesHelper.asJsonString(customerDTO)))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     void shouldReturnBadRequestWhenCustomerExists() throws Exception {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCpf(VALID_CPF);

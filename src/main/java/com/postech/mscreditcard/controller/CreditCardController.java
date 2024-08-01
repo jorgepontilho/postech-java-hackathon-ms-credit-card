@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class CreditCardController {
 
     @Autowired
-    private CreditCardUseCase creditCardUseCase;
+    private final CreditCardUseCase creditCardUseCase;
 
     private final CreditCardGateway creditCardGateway;
 

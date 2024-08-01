@@ -1,6 +1,7 @@
 package com.postech.mscreditcard.usecase;
 
 import com.postech.mscreditcard.dto.CardDTO;
+import com.postech.mscreditcard.exceptions.CardExistException;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -67,6 +69,16 @@ public class CreditCardUseCaseTest {
             when(creditCardGateway.listAllCustomerCards(anyString())).thenReturn(Arrays.asList(new CardDTO(), new CardDTO()));
 
             assertThrows(MaxCardsException.class, () -> creditCardUseCase.validateCardCreation(creditCardDTO));
+        }
+
+        @Test
+        void shouldThrowCardExist() {
+            CardDTO creditCardDTO = new CardDTO();
+            creditCardDTO.setNumero("12345678900");
+
+            when(creditCardGateway.listAllCards(anyString())).thenReturn(List.of(new CardDTO()));
+
+            assertThrows(CardExistException.class, () -> creditCardUseCase.validateCardCreation(creditCardDTO));
         }
 
         @Test

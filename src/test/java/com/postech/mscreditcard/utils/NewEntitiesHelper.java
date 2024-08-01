@@ -12,7 +12,7 @@ public class NewEntitiesHelper {
 
     public static final String CARD_NUMBER = "1278 8798 9878 7987";
     public static final String EXPIRATION_DATE = "01/26";
-    public static final String CPF = "19469300219";
+    public static final String CPF = "85838550139";
 
     public static Customer newCustomer() {
         return new Customer(1L, CPF);
