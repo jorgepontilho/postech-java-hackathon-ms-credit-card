@@ -16,6 +16,10 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     networks:
       - my_network
 
@@ -32,6 +36,10 @@ services:
       MYSQL_HOSTNAME: mysql-credit-card
     ports:
       - 8080:8080
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     networks:
       - my_network
 
