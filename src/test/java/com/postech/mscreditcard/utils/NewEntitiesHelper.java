@@ -23,7 +23,9 @@ public class NewEntitiesHelper {
     }
 
     public static Payment newPayment() {
-        return new Payment(1L, "c5f200ff-6075-4fb7-b5bd-07e930bc9b95", newCustomer(), newCreditCard(), new BigDecimal("100"), LocalDateTime.now());
+        return new Payment(1L, "c5f200ff-6075-4fb7-b5bd-07e930bc9b95"
+                , newCustomer(), newCreditCard(), new BigDecimal("100")
+                , LocalDateTime.now(), "Compra de produto", "cartao_credito", "aprovado");
     }
 
     public static String asJsonString(final Object obj) {

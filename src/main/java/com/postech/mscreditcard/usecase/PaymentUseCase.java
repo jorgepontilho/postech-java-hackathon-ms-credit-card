@@ -2,6 +2,7 @@ package com.postech.mscreditcard.usecase;
 
 import com.postech.mscreditcard.dto.CardDTO;
 import com.postech.mscreditcard.dto.PaymentDTO;
+import com.postech.mscreditcard.exceptions.CardNotFoundException;
 import com.postech.mscreditcard.exceptions.InvalidPaymentException;
 import com.postech.mscreditcard.exceptions.NoLimitCardException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
@@ -36,7 +37,7 @@ public class PaymentUseCase {
             log.info("Validate payment creation {} - {}", paymentDTO.getCpf(), paymentDTO.getValor());
             CardDTO creditCardDTO = creditCardGateway.findCustomerCard(paymentDTO.getCpf(),paymentDTO.getNumero());
             if (creditCardDTO == null){
-                throw new InvalidPaymentException("Cartão inválido");
+                throw new CardNotFoundException("Cartão inválido");
             }
 
             if (!isValidExpirationDate(paymentDTO.getDataValidade())) {
@@ -45,7 +46,7 @@ public class PaymentUseCase {
             CardDTO cardDTO = creditCardGateway.listAllCustomerCards(paymentDTO.getCpf()).stream()
                     .filter(c -> c.getNumero().equals(paymentDTO.getNumero()))
                     .findFirst()
-                    .orElseThrow(() -> new InvalidPaymentException("Cartão não encontrado"));
+                    .orElseThrow(() -> new CardNotFoundException("Cartão não encontrado"));
 
             if (cardDTO.getLimite().compareTo(paymentDTO.getValor()) < 0) {
                 log.error("Cartão sem limite: {} cpf: {}", cardDTO.getLimite(), paymentDTO.getCpf());

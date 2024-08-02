@@ -1,5 +1,6 @@
 package com.postech.mscreditcard.gateway;
 
+import com.postech.mscreditcard.dto.PaymentClientDTO;
 import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.entity.Card;
 import com.postech.mscreditcard.entity.Payment;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,11 +32,19 @@ public class PaymentGateway implements IPaymentGateway {
     @Override
     public PaymentDTO createPayment(PaymentDTO paymentDTO) {
         Card card = cardRepository.findByCardNumber(paymentDTO.getNumero())
-                .orElseThrow(()-> new NotFoundException("Cartão não encontrado"));
-
+                .orElseThrow(() -> new NotFoundException("Cartão não encontrado"));
+        paymentDTO.setStatus("aprovado");
         Payment paymentNew = new Payment(paymentDTO, card);
         paymentNew = paymentRepository.save(paymentNew);
         return paymentNew.toDTO();
+    }
+
+    @Override
+    public void createPaymentNotOK(PaymentDTO paymentDTO, String status) {
+        paymentDTO.setStatus(status);
+        Card card = cardRepository.findByCardNumber(paymentDTO.getNumero()).orElseThrow();
+        Payment paymentNew = new Payment(paymentDTO, card);
+        paymentRepository.save(paymentNew);
     }
 
     private PaymentDTO toPaymentDTO(Payment payment) {
@@ -50,11 +60,11 @@ public class PaymentGateway implements IPaymentGateway {
     }
 
     @Override
-    public PaymentDTO findByUuid(String uuid) {
+    public PaymentClientDTO findByUuid(String uuid) {
         try {
             return paymentRepository.findByUuid(uuid).orElseThrow(() -> {
                 throw new NotFoundException("Pagamento não encontrado");
-            }).toDTO();
+            }).toClientDTO();
         } catch (NotFoundException ne) {
             throw ne;
         } catch (Exception e) {

@@ -37,6 +37,12 @@ public class PaymentDTO {
 
     private String uuid;
 
+    private String descricao;
+
+    private String metodo_pagamento;
+
+    private String status;
+
     public PaymentDTO(Payment payment) {
         this.id = payment.getId();
         this.uuid = payment.getUuid();
@@ -44,6 +50,9 @@ public class PaymentDTO {
         this.numero = payment.getCard().getCardNumber();
         this.dataValidade = payment.getCard().getExpirationDate();
         this.cvv = payment.getCard().getCvv();
+        this.descricao = payment.getDescricao();
+        this.metodo_pagamento = payment.getMetodo_pagamento();
+        this.status = payment.getStatus();
         this.valor = payment.getValue();
     }
 }
