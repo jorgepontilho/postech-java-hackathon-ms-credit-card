@@ -46,7 +46,7 @@ public class CustomerUseCaseTest {
             CustomerDTO customerDTO = new CustomerDTO();
             customerDTO.setCpf("194693002-19");
 
-            when(customerGateway.findByCpf(anyString())).thenThrow(new NotFoundException("Customer not found"));
+            when(customerGateway.findByCpf(anyString())).thenThrow(new NotFoundException("Cliente não encontrado"));
 
             boolean result = customerUseCase.canCreateCustomer(customerDTO);
 

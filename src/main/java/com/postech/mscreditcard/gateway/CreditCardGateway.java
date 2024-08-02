@@ -49,7 +49,7 @@ public class CreditCardGateway implements ICreditCardGateway {
         try {
             Card cardNew = new Card(cardDTO);
             Customer customer = customerRepository.findByCpf(cardDTO.getCpf())
-                    .orElseThrow(() -> new NotFoundException("Customer not found"));
+                    .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
             cardNew.setCustomer(customer);
             cardNew = cardRepository.save(cardNew);
             return cardNew.toDTO();

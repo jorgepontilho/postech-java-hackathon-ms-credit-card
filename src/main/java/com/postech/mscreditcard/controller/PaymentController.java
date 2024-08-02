@@ -70,9 +70,33 @@ public class PaymentController {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        log.info("GetMapping - listAllPayments");
+        try {
+            log.info("GetMapping - listAllPayments");
+            return new ResponseEntity<>(paymentGateway.listAllPayments(), HttpStatus.OK);
+        } catch (UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
-        return new ResponseEntity<>(paymentGateway.listAllPayments(), HttpStatus.OK);
+    @GetMapping("/pagamentos/cliente/{chave}")
+    @Operation(summary = "Get Payment", responses = {
+            @ApiResponse(description = "Get Payment", responseCode = "200"),
+    })
+    public ResponseEntity<?> getPayment(HttpServletRequest request, @PathVariable @Valid String chave) {
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
+        }
+        try {
+            log.info("GetMapping - listPayment");
+            return new ResponseEntity<>(paymentGateway.findByUuid(chave), HttpStatus.OK);
+        } catch (UnknownErrorException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 }

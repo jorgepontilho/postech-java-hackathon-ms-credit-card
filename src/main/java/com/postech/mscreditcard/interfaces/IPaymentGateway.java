@@ -7,5 +7,6 @@ public interface IPaymentGateway {
 
     PaymentDTO createPayment(PaymentDTO paymentDTO);
 
+    PaymentDTO findByUuid(String uuid);
     List<PaymentDTO> listAllPayments();
 }

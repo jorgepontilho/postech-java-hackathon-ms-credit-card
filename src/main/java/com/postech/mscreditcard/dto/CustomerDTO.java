@@ -1,8 +1,6 @@
 package com.postech.mscreditcard.dto;
 
-import com.postech.mscreditcard.entity.Customer;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
@@ -45,9 +43,5 @@ public class CustomerDTO {
         this.estado = uf;
         this.cep = zipCode;
         this.pais = country;
-    }
-
-    public Customer toEntity() {
-        return new Customer(this);
     }
 }

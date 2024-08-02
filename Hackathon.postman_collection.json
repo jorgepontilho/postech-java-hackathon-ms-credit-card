@@ -238,7 +238,7 @@
 			"name": "3.0 - Payment",
 			"item": [
 				{
-					"name": "2.3 - pagamentos",
+					"name": "3.1 - pagamentos",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -277,7 +277,7 @@
 					"response": []
 				},
 				{
-					"name": "2.4 -pagamentos",
+					"name": "3.2 -pagamentos",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -301,6 +301,36 @@
 							"path": [
 								"api",
 								"pagamentos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.3 -pagamentos/cliente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/pagamentos/cliente/{uuid}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pagamentos/cliente/{uuid}"
 							]
 						}
 					},

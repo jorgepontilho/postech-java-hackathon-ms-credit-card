@@ -38,7 +38,7 @@ public class CustomerGateway implements ICustomerGateway {
     public CustomerDTO findByCpf(String cpf) {
         try {
             return customerRepository.findByCpf(cpf).orElseThrow(() -> {
-                throw new NotFoundException("Customer not found");
+                throw new NotFoundException("Cliente não encontrado");
             }).toDTO();
         } catch (NotFoundException ne) {
             throw ne;
