@@ -35,10 +35,10 @@ public class CreditCardController {
     @PostMapping("/cartao")
     @Operation(summary = "Create a new Card with a DTO", responses = {
             @ApiResponse(description = "The new Card was created", responseCode = "200", content = @Content(schema = @Schema(implementation = Card.class))),
-            @ApiResponse(description = "Fields Invalid", responseCode = "400", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
             @ApiResponse(description = "Max cards reached", responseCode = "403", content = @Content(schema = @Schema(type = "string", example = "Número máx. de cartões excedido"))),
-            @ApiResponse(description = "Server Error", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
+            @ApiResponse(description = "Fields Invalid", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
+            @ApiResponse(description = "Server Error", responseCode = "501", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
     public ResponseEntity<?> createCard(HttpServletRequest request, @Valid @RequestBody CardDTO cardDTO) {
         if (request.getAttribute("error") != null) {
