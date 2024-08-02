@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "612167f6-b6cc-46e1-84f1-640c2b0c520c",
+		"_postman_id": "ffcb9256-f611-4418-ad25-c1fedfcb781e",
 		"name": "Hackathon",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3936081",
-		"_collection_link": "https://warped-space-1378.postman.co/workspace/Team-Workspace~12b840d4-b62d-4d10-8c05-2f64ca749b5b/collection/3936081-612167f6-b6cc-46e1-84f1-640c2b0c520c?action=share&source=collection_link&creator=3936081"
+		"_exporter_id": "12858581"
 	},
 	"item": [
 		{
@@ -101,6 +100,16 @@
 				{
 					"name": "1.1 - cliente",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -113,6 +122,37 @@
 							"path": [
 								"api",
 								"cliente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 - cliente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoLWFwaSIsInN1YiI6ImFkajIiLCJleHAiOjE3MjI1NjI1MTF9.2LyXhILMSfzPk_jTfLrPv472DCo8Z4G_ABJ3tSAeS-s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/cliente/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"cliente",
+								"2"
 							]
 						}
 					},
