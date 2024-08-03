@@ -4,6 +4,7 @@ import com.postech.mscreditcard.dto.*;
 import com.postech.mscreditcard.entity.*;
 import com.postech.mscreditcard.exceptions.CardExistException;
 import com.postech.mscreditcard.exceptions.MaxCardsException;
+import com.postech.mscreditcard.exceptions.NotFoundException;
 import com.postech.mscreditcard.exceptions.UnknownErrorException;
 import com.postech.mscreditcard.gateway.CreditCardGateway;
 import com.postech.mscreditcard.usecase.CreditCardUseCase;
@@ -37,7 +38,9 @@ public class CreditCardController {
             @ApiResponse(description = "The new Card was created", responseCode = "200", content = @Content(schema = @Schema(implementation = Card.class))),
             @ApiResponse(description = "Not authenticated", responseCode = "401", content = @Content(schema = @Schema(type = "string", example = "Usuário não autenticado"))),
             @ApiResponse(description = "Max cards reached", responseCode = "403", content = @Content(schema = @Schema(type = "string", example = "Número máx. de cartões excedido"))),
+            @ApiResponse(description = "Cliente não cadastrado", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Cliente não encontrado"))),
             @ApiResponse(description = "Fields Invalid", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Campos inválidos ou faltando"))),
+            @ApiResponse(description = "Numero de cartao ja existe", responseCode = "500", content = @Content(schema = @Schema(type = "string", example = "Numero de cartão ja existe"))),
             @ApiResponse(description = "Server Error", responseCode = "501", content = @Content(schema = @Schema(type = "string", example = "Erro inesperado")))
     })
     public ResponseEntity<?> createCard(HttpServletRequest request, @Valid @RequestBody CardDTO cardDTO) {
@@ -53,9 +56,9 @@ public class CreditCardController {
 
         } catch (MaxCardsException me) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(me.getMessage());
-        } catch (CardExistException | UnknownErrorException me) {
+        } catch (CardExistException | UnknownErrorException | NotFoundException me) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(me.getMessage());
-        }  catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

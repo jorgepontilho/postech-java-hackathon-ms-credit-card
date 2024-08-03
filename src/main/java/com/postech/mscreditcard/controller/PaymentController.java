@@ -2,10 +2,7 @@ package com.postech.mscreditcard.controller;
 
 import com.postech.mscreditcard.dto.PaymentDTO;
 import com.postech.mscreditcard.entity.Payment;
-import com.postech.mscreditcard.exceptions.CardNotFoundException;
-import com.postech.mscreditcard.exceptions.InvalidPaymentException;
-import com.postech.mscreditcard.exceptions.NoLimitCardException;
-import com.postech.mscreditcard.exceptions.UnknownErrorException;
+import com.postech.mscreditcard.exceptions.*;
 import com.postech.mscreditcard.gateway.PaymentGateway;
 import com.postech.mscreditcard.security.SecurityFilter;
 import com.postech.mscreditcard.security.TokenService;
@@ -97,7 +94,7 @@ public class PaymentController {
         try {
             log.info("GetMapping - listPayment");
             return new ResponseEntity<>(paymentGateway.findByUuid(chave), HttpStatus.OK);
-        } catch (UnknownErrorException e) {
+        } catch (UnknownErrorException | NotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
