@@ -220,7 +220,6 @@ public class PaymentControllerTest {
             assertEquals("Usuário não autenticado", response.getBody());
         }
 
-        // Handles UnknownErrorException and returns HTTP 500 status code with the error message
         @Test
         public void test_list_all_payments_with_unknown_exception_return_http_500() {
             HttpServletRequest request = mock(HttpServletRequest.class);
