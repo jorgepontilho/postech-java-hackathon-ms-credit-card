@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -47,7 +48,7 @@ public class CustomerGatewayTest {
     }
 
     @Nested
-    class InsertCustomer {
+    class createCustomer {
         @Test
         void shouldCreateANewCustomer() {
             Customer customer = NewEntitiesHelper.newCustomer();
@@ -59,13 +60,24 @@ public class CustomerGatewayTest {
 
             assertThat(customerNew).isNotNull().isInstanceOf(CustomerDTO.class);
         }
+
+        @Test
+        void shouldThrowUnknownErrorExceptionWhenErrorOccurs() {
+            // Arrange
+            CustomerDTO customerDTO = new CustomerDTO();
+            when(customerRepository.save(any(Customer.class))).thenThrow(new RuntimeException("Database error"));
+
+            // Act & Assert
+            assertThrows(UnknownErrorException.class, () -> customerGateway.createCustomer(customerDTO));
+        }
+
     }
 
     @Nested
     class FindCustomerByCpf {
 
         @Test
-        void shouldFindCustomerByCpf() {
+        void test_find_by_cpf_success() {
             Customer customer = NewEntitiesHelper.newCustomer();
             when(customerRepository.findByCpf(customer.getCpf())).thenReturn(Optional.of(customer));
 
@@ -76,10 +88,17 @@ public class CustomerGatewayTest {
         }
 
         @Test
-        void shouldThrowNotFoundExceptionWhenCustomerNotFound() {
+        void test_cpf_not_found_throws_notfoundexception() {
             when(customerRepository.findByCpf(anyString())).thenReturn(Optional.empty());
 
             assertThrows(NotFoundException.class, () -> customerGateway.findByCpf("00000000000"));
+        }
+
+        @Test
+        void test_null_or_empty_cpf_throws_exception() {
+            when(customerRepository.findByCpf(anyString())).thenThrow(new RuntimeException("Database error"));
+
+            assertThrows(UnknownErrorException.class, () -> customerGateway.findByCpf("00000000000"));
         }
     }
 
