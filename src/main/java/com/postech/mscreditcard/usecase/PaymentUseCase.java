@@ -59,7 +59,7 @@ public class PaymentUseCase {
         }
     }
 
-    private boolean isValidExpirationDate(String expirationDate) {
+    boolean isValidExpirationDate(String expirationDate) {
         try {
             YearMonth expiration = YearMonth.parse(expirationDate, EXPIRATION_DATE_FORMATTER);
             return expiration.isAfter(YearMonth.now());
