@@ -97,6 +97,11 @@ public class SecurityFilterTest {
             // Act
             User user = securityFilter.validToken("validToken");
 
+            assertTrue(user.isEnabled());
+            assertTrue(user.isAccountNonExpired());
+            assertTrue(user.isAccountNonLocked());
+            assertTrue(user.isCredentialsNonExpired());
+
             // Assert
             assertNotNull(user);
         }
